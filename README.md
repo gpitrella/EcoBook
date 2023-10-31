@@ -1,3 +1,9 @@
+REPOST: 
+ORIGINAL: https://github.com/himanchau/react-native-book-app
+FIRST SCREENS (SININ, LOGIN): https://github.com/nomanaliakram321/BookStore
+
+
+
 ## React Native Book List App
 
 This is a sample application that makes use of reanimateed, shared elements transitions and lottie to deliver a smooth native experience with delightlful animations.
@@ -27,7 +33,7 @@ Important Code:
 `src/components/...jsx` Reusable Components  
 `src/anims/...json` Lotties Animations  
 `src/theme.js` Themes for light and dark  
-`src/RootNavigator.jsx` App navigation
+`src/navigation/RootNavigator.jsx` App navigation
 
 ### Dependencies
 I wanted to keep the dependencies outside of React Native & Expo to a minimum. The app relies on the following libraries as core, others you see in package.json are optional.

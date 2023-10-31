@@ -2,8 +2,10 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
+import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
+import Book from './Book';
 
 import Text from './Text';
 
@@ -19,11 +21,11 @@ const Rating = React.memo(({ rating }) => (
 ));
 
 // render search screen book
-function Book({ book, bookList }) {
+function SearchBook({ book, bookList }) {
   const { margin, colors, normalize } = useTheme();
   const BOOKW = normalize(120, 150);
   const BOOKH = BOOKW * 1.5;
-  const item = bookList.find((b) => b.bookId === book.bookId);
+  const item = bookList == 'all' ? book : bookList.find((b) => b.bookId === book.bookId);
 
   // styles
   const styles = {
@@ -40,7 +42,7 @@ function Book({ book, bookList }) {
     bookImg: {
       width: BOOKW,
       height: BOOKH,
-      borderRadius: 10,
+      borderRadius: 10
     },
     bookDetails: {
       flex: 1,
@@ -64,7 +66,7 @@ function Book({ book, bookList }) {
       <View style={styles.bookDetails}>
         {item?.status && (
           <Text bold color={colors.primary}>
-            {item.status}
+            {item.status == 'Completed' ? 'Carrito' : item.status}
           </Text>
         )}
         <Text bold size={17} numberOfLines={2}>
@@ -74,9 +76,12 @@ function Book({ book, bookList }) {
           {book.author.name}
         </Text>
         <Rating rating={book.avgRating} />
+        <Text style={styles.bookAuthor}>
+          $ {book.ratingsCount}
+        </Text>
       </View>
     </View>
-  );
+    );
 }
 
-export default React.memo(Book);
+export default React.memo(SearchBook);

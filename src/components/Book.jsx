@@ -17,7 +17,7 @@ import { setModal } from './StatusModal';
 function Book({ book, scrollX, index }) {
   const navigation = useNavigation();
   const { margin, normalize } = useTheme();
-  const BOOKW = normalize(120, 150);
+  const BOOKW = normalize(150, 150);
   const BOOKH = BOOKW * 1.5;
   const position = useDerivedValue(() => (index + 0.00001) * (BOOKW + margin) - scrollX.value);
   const inputRange = [-BOOKW, 0, BOOKW, BOOKW * 3];
@@ -28,7 +28,7 @@ function Book({ book, scrollX, index }) {
   const bookDetails = () => {
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
-    navigation.push('BookDetails', { book });
+    navigation.navigate('BookDetails', { book });
   };
 
   // change book status
@@ -90,15 +90,18 @@ function Book({ book, scrollX, index }) {
   });
 
   return (
-    <Pressable onPress={bookDetails} onLongPress={changeStatus}>
+    <Pressable onPress={bookDetails} onLongPress={changeStatus} key={index}>
       <Animated.View style={anims.book}>
         <SharedElement id={book.bookId}>
           <View style={styles.imgBox}>
             <Image style={styles.bookImg} source={{ uri: book.imageUrl }} />
           </View>
         </SharedElement>
-        <Text size={13} numberOfLines={1} center style={styles.bookText}>
-          {book.author.name}
+        <Text weight={700} size={16} numberOfLines={2} left style={styles.bookText}>
+          {book.title}
+        </Text>
+        <Text size={14} numberOfLines={1} left style={styles.bookText}>
+        ⭐ {book.avgRating} - $ {book.ratingsCount}
         </Text>
       </Animated.View>
     </Pressable>

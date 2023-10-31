@@ -14,7 +14,7 @@ function ThemedButton({
       height: 50,
       borderWidth: 1,
       borderRadius: 50,
-      borderColor: colors.border,
+      borderColor: colors.primary,
       alignItems: 'center',
       justifyContent: 'center',
       shadowRadius: 0,
@@ -22,12 +22,17 @@ function ThemedButton({
       shadowColor: colors.primary,
       shadowOffset: { width: 3, height: 3 },
       backgroundColor: colors.button,
+      width: 'max-content',
     },
+    textBtn: {
+      fontWeight: 700,
+      color: '#fff'
+    }
   });
 
   return (
     <Pressable onPress={onPress} style={[styles.button, style]}>
-      <Text bold size={16} style={[textStyle]}>
+      <Text bold size={16} style={[styles.textBtn, textStyle]}>
         {children}
       </Text>
     </Pressable>

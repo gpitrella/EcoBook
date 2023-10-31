@@ -39,7 +39,12 @@ function BookList({ books, title }) {
       paddingTop: margin,
       paddingHorizontal: margin,
       flexDirection: 'row',
+      marginTop: 10,
       justifyContent: 'space-between',
+    },
+    headingText: {
+      fontSize: 18,
+      fontWeight: 600,
     },
     listContainer: {
       padding: margin,
@@ -71,8 +76,8 @@ function BookList({ books, title }) {
   return (
     <View style={styles.list}>
       <View style={styles.heading}>
-        <Text size={17} bold>{title}</Text>
-        <Text size={17}>{books.length}</Text>
+        <Text size={17} style={styles.headingText} >{title}</Text>
+        <Text size={17} style={styles.headingText}>{books.length}</Text>
       </View>
       <AnimatedFlatList
         horizontal

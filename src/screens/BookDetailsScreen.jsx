@@ -13,36 +13,22 @@ import { AntDesign } from '@expo/vector-icons';
 import { XMLParser } from 'fast-xml-parser';
 import * as Haptics from 'expo-haptics';
 import axios from 'axios';
-
+import { Entypo } from "@expo/vector-icons";
 import Text from '../components/Text';
 import List from '../components/BookList';
 import Button from '../components/Button';
 import BookHeader from '../components/BookHeader';
-import { useBooksState } from '../BookStore';
 import { setModal } from '../components/StatusModal';
+import { useSelector } from "react-redux";
 
 const Console = console;
 const parser = new XMLParser();
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-// Get icon for status button
-const getIcon = (stat) => {
-  switch (stat) {
-    case 'Reading':
-      return 'rocket1';
-    case 'Completed':
-      return 'Trophy';
-    case 'Wishlist':
-      return 'book';
-    default:
-      return 'plus';
-  }
-};
-
 // Default screen
 function BookDetailsScreen({ navigation, route }) {
   const { book } = route.params;
-  const { books: bookList } = useBooksState();
+  const bookList = useSelector((state) => state.homeSlice.books);
   const [related, setRelated] = useState([]);
   const [fullBook, setFullBook] = useState(null);
   const [author, setAuthor] = useState(null);
@@ -58,6 +44,18 @@ function BookDetailsScreen({ navigation, route }) {
     margin, width, dark, colors, normalize, status, ios,
   } = useTheme();
   const HEADER = normalize(width + status, 500) + margin;
+  const user = useSelector((state) => state.authSlice.user);
+  const yourWhishBooks = useSelector((state) => state.homeSlice.yourWhishBooks);
+  const yourCarBooks = useSelector((state) => state.homeSlice.yourCarBooks);
+  const index = yourWhishBooks.findIndex((b) => b === book?.bookId);
+  const indexCar = yourCarBooks.findIndex((b) => b === book?.bookId);
+
+  // Get icon for status button
+  const getIcon = () => {
+    if (index !== -1) { return 'bookmarks' }
+    else if (indexCar !== -1) { return 'shopping-cart' }
+    else { return 'plus' };    
+  };
 
   // Go back to previous screen
   const goBack = () => {
@@ -110,6 +108,7 @@ function BookDetailsScreen({ navigation, route }) {
     },
   });
 
+  useEffect(() => { getIcon() }, [index, indexCar]);
   // Load book details
   useEffect(() => {
     // Related Books
@@ -133,6 +132,7 @@ function BookDetailsScreen({ navigation, route }) {
       })
       .catch((error) => {
         Console.log('Failed to get book details:', error);
+        setFullBook(null);
       });
 
     // Author details
@@ -244,6 +244,11 @@ function BookDetailsScreen({ navigation, route }) {
     addIcon: {
       top: 3,
     },
+    scroll: {
+      marginHorizontal: margin,
+      marginTop: 25,
+      marginBottom: 10,
+    }    
   };
 
   // Find book in list
@@ -251,8 +256,6 @@ function BookDetailsScreen({ navigation, route }) {
 
   // Render book details
   return (
-    <>
-      <View style={styles.overlay} />
       <PanGestureHandler
         ref={panRef}
         failOffsetY={-5}
@@ -285,8 +288,14 @@ function BookDetailsScreen({ navigation, route }) {
                   <Text center size={13}>STATUS</Text>
                   <Text bold color={colors.primary} style={styles.subDetails}>{item ? item.status : '-'}</Text>
                 </Pressable>
+                <View style={[styles.detailsRow, styles.detailsRowBorder]}>
+                  <Text center size={13}>PRECIO</Text>
+                  <Text bold style={styles.subDetails}>$ {book.ratingsCount}</Text>
+                </View>
               </View>
-
+              <Button onPress={() => navigation.navigate('Address', { book })} style={styles.scroll}>
+                Comprar
+              </Button>
               <Animated.View style={anims.details}>
                 <View style={styles.authorBox}>
                   <Image source={{ uri: author?.image_url }} style={styles.authorImage} />
@@ -297,20 +306,26 @@ function BookDetailsScreen({ navigation, route }) {
                     </Text>
                   </View>
                 </View>
+                <View style={styles.authorBox}>
+                   <Text bold size={17}>Descripción:</Text>
+                </View>
                 <Text size={16} numberOfLines={10} style={styles.aboutBook}>
-                  {fullBook?.description.replace(/(<([^>]+)>)/ig, ' ')}
+                  { fullBook?.description !== '' || fullBook?.description == undefined
+                    ? fullBook?.description.replace(/(<([^>]+)>)/ig, ' ')
+                    : item?.description.html.replace(/(<([^>]+)>)/ig, ' ')
+                  }
+                  
                 </Text>
-                <List books={related} title="Related Books" navigation={navigation} />
+                <List books={related} title="Libros Relacionados" navigation={navigation} />
               </Animated.View>
             </AnimatedScrollView>
 
             <Button onPress={openSheet} style={styles.addButton}>
-              <AntDesign size={21} name={getIcon(item?.status)} style={styles.addIcon} />
+              <Entypo size={21} name={getIcon()} style={styles.addIcon} />
             </Button>
           </Animated.View>
         </Animated.View>
       </PanGestureHandler>
-    </>
   );
 }
 

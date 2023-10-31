@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Pressable, Keyboard } from 'react-native';
 import Animated, {
   interpolate, withTiming,
   useAnimatedStyle, useSharedValue, useAnimatedScrollHandler, useAnimatedProps,
@@ -8,11 +8,16 @@ import { useTheme } from '@react-navigation/native';
 import { SharedElement } from 'react-navigation-shared-element';
 import { AntDesign } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import * as Haptics from 'expo-haptics';
-
 import Text from '../components/Text';
 import BookList from '../components/BookList';
-import { useBooksState } from '../BookStore';
+import BookGenre from '../components/BookGenre';
+import MainBook from '../components/MainBook';
+import { useSelector } from "react-redux";
+import { useGetGenresQuery } from "../services/ecApi";
+import { setModal } from '../components/StatusModal';
+import { Platform } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { Entypo } from "@expo/vector-icons";
 
 const studies = require('../anims/landscape.json');
 
@@ -33,12 +38,17 @@ const getGreeting = () => {
 // home screen
 function BookListScreen({ navigation }) {
   const {
-    dark, width, colors, margin, navbar, normalize, ios,
+    dark, width, height, colors, margin, navbar, normalize, ios,
   } = useTheme();
+  const { data: genres, isLoading, isError, error } = useGetGenresQuery();
+  const [ dataGenres, setDataGenres ] = useState([]);
+  const [ lastBooks, setLastBooks ] = useState([]);
   const HEADER = normalize(300, 400);
   const scrollY = useSharedValue(0);
   const loaded = useSharedValue(0);
-  const { books } = useBooksState();
+  const books = useSelector((state) => state.homeSlice.books);
+  const yourWhishBooks = useSelector((state) => state.homeSlice.yourWhishBooks);
+  const yourCarBooks = useSelector((state) => state.homeSlice.yourCarBooks);
 
   // fade in screen, slowly if light mode is on
   const onLayout = () => {
@@ -57,6 +67,14 @@ function BookListScreen({ navigation }) {
     Haptics.selectionAsync();
     navigation.push('BookSearch', { bookList: books });
   };
+
+  useEffect(() => {
+    !isLoading && genres !== undefined ? setDataGenres(genres) : null; 
+    if (books) {
+      const reversed = [...books].slice(books.length - 20).reverse();
+      setLastBooks(reversed);
+    }  
+  }, [isLoading, books]);
 
   // all the styles
   const styles = {
@@ -107,11 +125,12 @@ function BookListScreen({ navigation }) {
       paddingHorizontal: margin,
       flexDirection: 'row',
       alignItems: 'center',
+      marginLeft: interpolate(scrollY.value + 30, [HEADER - navbar, HEADER - navbar + 40], [20, -20], 'clamp'),
       backgroundColor: colors.card,
       borderColor: colors.background,
       marginBottom: interpolate(scrollY.value, [HEADER - navbar, HEADER - navbar + 30], [-25, 6], 'clamp'),
       height: interpolate(scrollY.value, [HEADER - navbar, HEADER - navbar + 30], [50, 38], 'clamp'),
-      width: interpolate(scrollY.value, [HEADER - navbar, HEADER - navbar + 30], [width - margin * 2, width - margin], 'clamp'),
+      width: interpolate(scrollY.value + 30, [HEADER - navbar, HEADER - navbar + 40], [width - margin * 2, width - margin * 4], 'clamp'),
       borderWidth: interpolate(scrollY.value, [HEADER - navbar, HEADER - navbar + 30], [1, 0], 'clamp'),
     })),
     searchIcon: {
@@ -128,23 +147,69 @@ function BookListScreen({ navigation }) {
     scrollView: {
       paddingTop: HEADER,
     },
+    mainBook: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'flex-start',
+      marginLeft: 20,
+      marginRight: 20,
+      alignContent: 'space-around'
+    },
+    containerBook: {
+      width: '50%',
+      marginBottom: 20
+    },
+    topIcon: {
+      position: 'absolute',
+      zIndex: 100,
+      top: 35,
+      right: 20,
+    }
+  };
+  // show WishBook screen
+  const bookWishList = () => {
+    Haptics.selectionAsync();
+    navigation.push('WishList');
   };
 
-  // filter books into their categories
-  const reading = books.filter((b) => b.status === 'Reading');
-  const completed = books.filter((b) => b.status === 'Completed');
-  const wishlist = books.filter((b) => b.status === 'Wishlist');
+  // view book details
+  // hide on current screen
+  const bookDetails = (book) => {
+    Haptics.selectionAsync();
+    navigation.push('BookDetails', { book });
+  };
 
+  // edit selected book
+  const editStatus = (book) => {
+    setModal(book);
+    Keyboard.dismiss();
+    Haptics.selectionAsync();
+  };
+  // filter books into their categories
+  // const reading = books.filter((b) => b.status === 'Reading');
+  // const completed = books.filter((b) => b.status === 'Completed');
+  // const wishlist = books.filter((b) => b.status === 'Wishlist');
+ 
   // render all the lists
   return (
     <Animated.View onLayout={onLayout} style={styles.screen}>
+      <View style={styles.topIcon}>
+        <Pressable onPress={bookWishList}>
+          <Entypo
+            name="bookmarks"
+            size={30}
+            color={colors.primary}
+          />
+        </Pressable>
+      </View>
       <Animated.View style={styles.header}>
         <Animated.View style={styles.logo}>
-          <LottieViewAnimated
+        { Platform.OS != 'web' ? <LottieViewAnimated
             source={studies}
             style={styles.lottie}
             animatedProps={styles.lottieProps}
-          />
+          /> : <></> }
         </Animated.View>
         <Text animated style={styles.welcomeText} center size={20}>
           {getGreeting()}
@@ -166,9 +231,23 @@ function BookListScreen({ navigation }) {
         onScroll={scrollHandler}
         contentContainerStyle={styles.scrollView}
       >
-        <BookList books={reading} title="Reading" />
-        <BookList books={completed} title="Completed" />
-        <BookList books={wishlist} title="Wishlist" />
+        <BookList books={lastBooks} title="Ultimos libros publicados" />
+        <View style={styles.mainBook}>
+          {books?.map((book, index) => (
+            <View style={styles.containerBook} key={index}>
+              <Pressable
+                key={book.bookId}
+                onPress={() => bookDetails(book)}
+                onLongPress={() => editStatus(book)}
+              >
+                <MainBook book={book} bookList={'all'} index={index}/>
+              </Pressable>
+            </View>
+          ))}
+        </View>
+        <BookGenre genres={dataGenres} title="Buscar por Genero" />
+        { yourCarBooks[0] ? <BookList books={yourCarBooks} title="Agregados al Carrito" /> : null }
+        { yourWhishBooks[0] ? <BookList books={yourWhishBooks} title="Tus Favoritos" /> : null }
       </Animated.ScrollView>
     </Animated.View>
   );

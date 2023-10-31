@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, Pressable } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { SharedElement } from 'react-navigation-shared-element';
 import { useTheme } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { useTheme } from '@react-navigation/native';
 import Text from './Text';
 
 // Load a single book
-function BookHeader({ scrollY, book }) {
+function BookHeader({ scrollY, book, pickImage }) {
   const {
     width, margin, colors, normalize, navbar, status,
   } = useTheme();
@@ -93,14 +93,19 @@ function BookHeader({ scrollY, book }) {
       <Animated.View style={anims.cover}>
         <SharedElement id={book.bookId}>
           <View style={styles.imgBox}>
-            <Image style={styles.bookImg} source={{ uri: book.imageUrl }} />
+          { pickImage ?
+            <Pressable onPress={() => pickImage()}> 
+              <Image style={styles.bookImg} source={{ uri: book.imageUrl }} />
+            </Pressable> 
+            : <Image style={styles.bookImg} source={{ uri: book.imageUrl }} />
+          }
           </View>
         </SharedElement>
       </Animated.View>
 
       <Animated.View style={anims.title}>
-        <Text bold center size={21} numberOfLines={2}>{book.bookTitleBare}</Text>
-        <Text size={17} style={styles.author}>{`by ${book.author.name}`}</Text>
+        { book.bookTitleBare !== '' ? <Text bold center size={21} numberOfLines={2}>{book.bookTitleBare}</Text> : null }
+        { book.author.name !== '' ? <Text size={17} style={styles.author}>{`by ${book.author.name}`}</Text> : null }
       </Animated.View>
 
       <Animated.View style={anims.title2}>

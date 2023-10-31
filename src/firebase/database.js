@@ -1,0 +1,1 @@
+export const base_url = "https://ecommercetech-5b57a-default-rtdb.firebaseio.com/"

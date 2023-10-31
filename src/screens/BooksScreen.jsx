@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 
 import Text from '../components/Text';
 import Button from '../components/Button';
+import { useDispatch } from "react-redux";
+import { setFirstAccess } from "../redux/slice/homeSlice";
 
 // Import lottie animation
 const lottie = require('../anims/reading.json');
@@ -12,7 +14,13 @@ const lottie = require('../anims/reading.json');
 // Default screen
 function Books({ navigation }) {
   const { colors, margin, normalize } = useTheme();
-
+  
+  const dispatch = useDispatch();
+  
+  const getStart = () => {
+    dispatch(setFirstAccess(true))
+    navigation.push('BookList')
+  }
   // Styles
   const styles = StyleSheet.create({
     screen: {
@@ -28,8 +36,8 @@ function Books({ navigation }) {
       width: normalize(320, 400),
     },
     title: {
-      fontSize: 50,
-      lineHeight: 60,
+      fontSize: 40,
+      lineHeight: 50,
       fontWeight: '700',
       marginTop: margin * 2,
     },
@@ -45,12 +53,12 @@ function Books({ navigation }) {
     <ScrollView style={styles.screen} centerContent contentContainerStyle={styles.scroll}>
       <LottieView autoPlay loop style={styles.lottie} source={lottie} />
       <Text bold center style={styles.title}>
-        {'Modern \n Book List'}
+        {'Welcome to\n EcoBook'}
       </Text>
       <Text center style={styles.subTitle}>
-        Its never been easier to organize your reading list in one place.
+        Encontra todos los libros que buscas y colabora con el planeta.
       </Text>
-      <Button onPress={() => navigation.push('BookList')}>
+      <Button onPress={() => getStart()}>
         Get Started
       </Button>
     </ScrollView>
