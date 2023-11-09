@@ -5,6 +5,7 @@
 ## Aplicación de Lista de Libros en React Native
 
 Esta es una aplicación de libros que cuenta con las opciones de ver los libros disponibles (nube Firebase), los cuales pueden agreagarse a favoritos o al carrito. La aplicación cuenta con diferentes pantallas como pantalla de inicio, detalle del libro, check out, configuración del usuario, etc.
+FIGMA DEL PROYECTO: https://www.figma.com/file/pbK7iXHt8HWJ5f3x8YMtND/Erabook---Ebook-Store-%26-Ebook-Reader-App-UI-Kit-(Community)-(Community)?type=design&node-id=0-1&mode=design&t=YTmtnbMweXpuNfU1-0
 
 ## Aplicación de Lista de Libros en React Native
 
