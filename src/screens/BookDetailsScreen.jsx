@@ -45,10 +45,13 @@ function BookDetailsScreen({ navigation, route }) {
   } = useTheme();
   const HEADER = normalize(width + status, 500) + margin;
   const user = useSelector((state) => state.authSlice.user);
+  const books = useSelector((state) => state.homeSlice.books);
   const yourWhishBooks = useSelector((state) => state.homeSlice.yourWhishBooks);
   const yourCarBooks = useSelector((state) => state.homeSlice.yourCarBooks);
   const index = yourWhishBooks.findIndex((b) => b === book?.bookId);
   const indexCar = yourCarBooks.findIndex((b) => b === book?.bookId);
+  const [ lastBooks, setLastBooks ] = useState([]);
+
 
   // Get icon for status button
   const getIcon = () => {
@@ -107,22 +110,27 @@ function BookDetailsScreen({ navigation, route }) {
       }
     },
   });
-
-  useEffect(() => { getIcon() }, [index, indexCar]);
-  // Load book details
   useEffect(() => {
-    // Related Books
-    axios.get(`https://www.goodreads.com/book/auto_complete?format=json&q=${book.author.name}`)
-      .then((resp) => {
-        const bks = resp.data.filter((bk, i, arr) => {
-          arr[i].imageUrl = bk.imageUrl.replace(/_..../, '_SY475_');
-          return (book.bookId !== bk.bookId);
-        });
-        setRelated(bks);
-      })
-      .catch((error) => {
-        Console.log('Failed to related books:', error);
-      });
+    if (books) {
+      const reversed = [...books].slice(books.length - 5).reverse();
+      setLastBooks(reversed);
+    }  
+  }, [books]);
+  useEffect(() => { getIcon() }, [index, indexCar]);
+  // // Load book details
+  useEffect(() => {
+    // // Related Books
+    // axios.get(`https://www.goodreads.com/book/auto_complete?format=json&q=${book.author.name}`)
+    //   .then((resp) => {
+    //     const bks = resp.data.filter((bk, i, arr) => {
+    //       arr[i].imageUrl = bk.imageUrl.replace(/_..../, '_SY475_');
+    //       return (book.bookId !== bk.bookId);
+    //     });
+    //     setRelated(bks);
+    //   })
+    //   .catch((error) => {
+    //     Console.log('Failed to related books:', error);
+    //   });
 
     // Book details
     axios.get(`https://www.goodreads.com/book/show/${book.bookId}.xml?key=Bi8vh08utrMY3HAqM9rkWA`)
@@ -316,7 +324,7 @@ function BookDetailsScreen({ navigation, route }) {
                   }
                   
                 </Text>
-                <List books={related} title="Libros Relacionados" navigation={navigation} />
+                <List books={lastBooks} title="Más libros de interés" navigation={navigation} />
               </Animated.View>
             </AnimatedScrollView>
 

@@ -21,11 +21,13 @@ import Animated, {
 import * as ImagePicker from "expo-image-picker";
 import * as Haptics from 'expo-haptics';
 import BookHeader from '../../components/BookHeader';
-import { usePutBookMutation } from "../../services/ecApi";
+import { usePutBookMutation, useGetBooksQuery } from "../../services/ecApi";
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import AuthNavigator from "../../navigation/AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setBooks } from "../../redux/slice/homeSlice";
+
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
@@ -37,6 +39,7 @@ function PublishBook({ navigation }) {
   const BOOKW = normalize(150, 150);
   const BOOKH = BOOKW * 1.5;
   const dispatch = useDispatch();
+  const { data: booksapi, isLoading, isError, error } = useGetBooksQuery();
   const panRef = useRef();
   const [avatarLoad, setAvatarLoad] = useState('');
   const [enabled, setEnabled] = useState(true);
@@ -75,7 +78,7 @@ function PublishBook({ navigation }) {
       }      
     }
     checkUser();
-  }, [user, checkedUser])
+  }, [user])
 
   const [newBook, setNewBook] = useState({
     "author": {
@@ -104,15 +107,16 @@ function PublishBook({ navigation }) {
     "ratingsCount": null,
     "status": "Completed",
     "title": "",
-    "workId": "3349450"
+    "workId": "3349450",
+    "user": 'without user'
   });
-
+  
   const onPublishBook = async () => {
-    // dispatch(publishBook(newBook));
     await putBook(newBook);
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
     navigation.navigate('BookDetails', { book: newBook });
+    !isLoading && booksapi !== undefined ? dispatch(setBooks(booksapi)) : null;
   }
 
 
@@ -278,7 +282,7 @@ const styles = StyleSheet.create({
                   placeholderTextColor={colors.text}
                   style={styles.input}
                   value={newBook.title}
-                  onChangeText={(text) => setNewBook({...newBook, title: text , bookTitleBare: text})}
+                  onChangeText={(text) => setNewBook({...newBook, title: text , bookTitleBare: text, user: checkedUser.user})}
               />
               <TextInput
                 placeholder="Autor"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, Pressable, SafeAreaView, Alert } from 'react-native';
 import { Avatar, ListItem, Switch } from '@rneui/themed';
 import InfoText from './InfoText';
@@ -38,10 +38,6 @@ function SettingsScreen({ navigation }) {
 
     if (!result.canceled) {
       setAvatarLoad(`data:image/jpeg;base64,${result.assets[0].base64}`);
-      // await putImage({
-      //   image: `data:image/jpeg;base64,${result.assets[0].base64}`,
-      // });
-
       refetch();
     }
   };
@@ -72,15 +68,18 @@ function SettingsScreen({ navigation }) {
     }
   };
 
-  // useEffect(async () => {
-  //     try {
-  //       const userEmail = await AsyncStorage.getItem("userEmail")
-  //       const userToken = await AsyncStorage.getItem("userToken")
-  //       userEmail && userToken ? setCheckedUser({ user: userEmail, token: userToken}) : setCheckedUser({ user: user, token: idToken});
-  //     } catch (error) {
-  //       console.log(error);
-  //     }      
-  //   }, [user]);
+  useEffect(() => {
+    const checkStoreUser = async () => {
+      try {
+        const userEmail = await AsyncStorage.getItem("userEmail")
+        const userToken = await AsyncStorage.getItem("userToken")
+        userEmail && userToken ? setUserStore(userEmail) : null;
+      } catch (error) {
+        console.log(error);
+      }  
+    }
+    checkStoreUser();    
+    }, [userEmail]);
 
   // Styles
   const styles = StyleSheet.create({
@@ -143,7 +142,7 @@ function SettingsScreen({ navigation }) {
                 fontSize: 16,
               }}
             >
-              {userEmail ? userEmail : userEmailStore }
+              {userEmail ? userEmail : userStore }
             </Text>
           </View>
         </View>
@@ -164,13 +163,15 @@ function SettingsScreen({ navigation }) {
             </ListItem.Content>
           </ListItem>
 
+          <Pressable onPress={() => navigation.navigate('yourPublishBook')} >
           <ListItem style={styles.listItemContainer}>
             <Entypo name={'archive'} size={24} color={'#52B788'} />
-            <ListItem.Content style={styles.listItemDetails}>
+            <ListItem.Content style={styles.listItemDetails} >
               <ListItem.Title>Libros Publicados</ListItem.Title>
               <AntDesign name="right" size={20} color={colors.text} />
             </ListItem.Content>
           </ListItem> 
+          </Pressable>
 
           <ListItem style={styles.listItemContainer}>
             <Entypo name={'briefcase'} size={24} color={'#52B788'} />

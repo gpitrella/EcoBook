@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Settings from "../screens/Setting/Settings";
 import TermsAndConditions from "../screens/TermsAndConditions";
 import PublishBook from "../screens/Setting/PublishBook";
+import YourPublishBook from "../screens/Setting/YourPublishBook";
 import AuthNavigator from "./AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -34,6 +35,7 @@ const SettingsNavigator = () => {
         <Stack.Screen name="settings" component={Settings} />
         <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
         <Stack.Screen name="publishBook" component={PublishBook} />
+        <Stack.Screen name="yourPublishBook" component={YourPublishBook} />
       </Stack.Navigator>
      }
   </>

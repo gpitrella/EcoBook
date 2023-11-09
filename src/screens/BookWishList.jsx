@@ -26,7 +26,7 @@ function BookWishList({ navigation }) {
   const yourWhishBooks = useSelector((state) => state.homeSlice.yourWhishBooks);
   const allBooks = useSelector((state) => state.homeSlice.books);
   // Find yourBooks
-  const wishlist = allBooks.filter(item => yourWhishBooks.includes(item.bookId));
+  const wishlist = allBooks ? allBooks.filter(item => yourWhishBooks.includes(item.bookId)) : [];
 
   const scrollY = useSharedValue(0);
   const loaded = useSharedValue(0);

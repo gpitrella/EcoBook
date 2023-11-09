@@ -50,6 +50,10 @@ function BookListScreen({ navigation }) {
   const yourWhishBooks = useSelector((state) => state.homeSlice.yourWhishBooks);
   const yourCarBooks = useSelector((state) => state.homeSlice.yourCarBooks);
 
+  // Find yourBooks
+  const wishlist = books ? books.filter(item => yourWhishBooks.includes(item.bookId)) : [];
+  const yourCars = books ? books.filter(item => yourCarBooks.includes(item.bookId)) : [];
+
   // fade in screen, slowly if light mode is on
   const onLayout = () => {
     loaded.value = withTiming(1, { duration: dark ? 300 : 600 });
@@ -246,8 +250,8 @@ function BookListScreen({ navigation }) {
           ))}
         </View>
         <BookGenre genres={dataGenres} title="Buscar por Genero" />
-        { yourCarBooks[0] ? <BookList books={yourCarBooks} title="Agregados al Carrito" /> : null }
-        { yourWhishBooks[0] ? <BookList books={yourWhishBooks} title="Tus Favoritos" /> : null }
+        { yourCars[0] ? <BookList books={yourCars} title="Agregados al Carrito" /> : null }
+        { wishlist[0] ? <BookList books={wishlist} title="Tus Favoritos" /> : null }
       </Animated.ScrollView>
     </Animated.View>
   );

@@ -27,7 +27,7 @@ function BookCar({ navigation }) {
   const yourCarBooks = useSelector((state) => state.homeSlice.yourCarBooks);
   const allBooks = useSelector((state) => state.homeSlice.books);
   // Find yourBooks
-  const car = allBooks.filter(item => yourCarBooks.includes(item.bookId));
+  const car = allBooks ? allBooks.filter(item => yourCarBooks.includes(item.bookId)) : []
   const scrollY = useSharedValue(0);
   const loaded = useSharedValue(0);
 

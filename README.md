@@ -1,61 +1,55 @@
-REPOST: 
+
+
+
+
+## Aplicación de Lista de Libros en React Native
+
+Esta es una aplicación de libros que cuenta con las opciones de ver los libros disponibles (nube Firebase), los cuales pueden agreagarse a favoritos o al carrito. La aplicación cuenta con diferentes pantallas como pantalla de inicio, detalle del libro, check out, configuración del usuario, etc.
+
+## Aplicación de Lista de Libros en React Native
+
+Para iniciar la aplicación es necesario seguir los siguientes pasos:
+1. Clonar la carpeta del repo en base local.
+2. Entrar en la carpeta del projecto /react-native-book-app
+3. Installar dependencias con el comando "npm install" o "yarn install"
+4. Iniciar el projecto. El mismo puede iniciar con el comando "npm start" o "yarm start". Posteriormente escanear el codigo QR con el celular para cargar la applicación en tu dispositivo mobile. Para cargar la aplicación directamente en Visual Studio Code (Dispositivo Virtual) iniciar el proyecto con el comando "expo start --android"
+
+### Objetivos
+- [x] Buscar y guardar libros en la lista (Firabase)
+- [x] Registro o Logeo en la aplicación (Firabase)
+- [x] Navegación inferior
+- [x] Soporte para Reanimated 2
+- [x] Animaciones integradas de Lottie
+- [x] Tematización global con modos claro y oscuro
+- [x] AsyncStorage para listas
+- [x] Compatibilidad con iOS y Android
+
+### Dependencias
+La aplicación desarrollada con EXPO y React Native cuenta con varias dependencias siendo las principales las listadas a continuación y la todalidad de las mismas puede encontrarse en el package.json:
+
+```
+    "@react-native-async-storage/async-storage": "1.18.2",
+    "@react-navigation/bottom-tabs": "^6.5.9",
+    "@react-navigation/native": "^6.1.7",
+    "@reduxjs/toolkit": "^1.9.6",
+    "@rneui/themed": "^4.0.0-rc.8",
+    "axios": "^0.26.1",
+    "expo": "^49.0.8",
+    "expo-image-picker": "~14.3.2",
+    "firebase": "^10.4.0",
+    "lottie-ios": "^3.2.3",
+    "lottie-react-native": "^5.1.4",
+    "react": "18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "0.72.6",
+    "react-native-reanimated": "~3.3.0",
+    "react-native-safe-area-context": "4.6.3",
+    "react-native-shared-element": "^0.8.4",
+    "react-navigation": "^4.4.4",
+    "react-redux": "^8.1.3",
+```
+
+### Repo Base
+La aplicación fue desarrolla a partir de la base del repo a continuación:
+
 ORIGINAL: https://github.com/himanchau/react-native-book-app
-FIRST SCREENS (SININ, LOGIN): https://github.com/nomanaliakram321/BookStore
-
-
-
-## React Native Book List App
-
-This is a sample application that makes use of reanimateed, shared elements transitions and lottie to deliver a smooth native experience with delightlful animations.
-
-![](book.gif) ![](dbook.gif)
-
-### Goals
-- [x] Find and save books in list
-- [x] Native app experience
-- [x] UI thread 60 fps animations
-- [x] Shared element transtions
-- [x] Flatlist animations
-- [x] Drag to navigate / close (AppStore stlye)
-- [x] Reanimated 2 support
-- [x] Integrated Lottie animations
-- [x] Haptics for nagivation
-- [x] Expo without ejecting
-- [x] Global themeing with light & dark modes
-- [x] AsyncStorage for lists
-- [x] Clean code with ES Lint
-- [x] iOS + Android support
-
-### Code Structure
-There are 3 main screens: list screen, search screen and book details. There's a fun intro / welcome screen with lottie animations as well.  
-Important Code:  
-`src/screens/...jsx` App Screens  
-`src/components/...jsx` Reusable Components  
-`src/anims/...json` Lotties Animations  
-`src/theme.js` Themes for light and dark  
-`src/navigation/RootNavigator.jsx` App navigation
-
-### Dependencies
-I wanted to keep the dependencies outside of React Native & Expo to a minimum. The app relies on the following libraries as core, others you see in package.json are optional.
-```
-react-navigation
-expo-haptics (remove if you don't want haptics)
-lottie-react-native (remove if you don't need lottie)
-react-native-reanimated
-react-native-shared-element
-react-navigation-shared-element
-```
-
-### Reference Material
-Reanimated 2  
-https://docs.swmansion.com/react-native-reanimated/docs
-
-Shared Element Navigation  
-https://github.com/IjzerenHein/react-navigation-shared-element/blob/navigation-v5/README.md
-
-Lottie Animations  
-https://github.com/lottie-react-native/lottie-react-native
-
-**Android**  
-If you're running into issues with Android please make sure to check that reanimated and shared navigation element (v5) are installed properly with the right versions and Layout Animations have been enabled.
-
