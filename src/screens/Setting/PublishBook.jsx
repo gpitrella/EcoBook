@@ -236,6 +236,10 @@ const styles = StyleSheet.create({
       marginBottom: 15,
       paddingHorizontal: 0,
       fontSize: 17,
+      backgroundColor: '#ececec',
+      paddingLeft: 15,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
     },
     backBtn: {
       width: '100%',
@@ -249,6 +253,10 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       margin: 'auto',
       justifyContent: 'center',
+    },
+    topDescription: {
+      marginBottom: 20,
+      fontSize: 16
     }
   })
 
@@ -274,7 +282,7 @@ const styles = StyleSheet.create({
               contentContainerStyle={styles.scrollContainer}
             >    
             <Animated.View style={styles.details}>   
-              <Text>
+              <Text style={styles.topDescription}>
                 Ingresa toda la información de tu libro:
               </Text>
               <TextInput

@@ -7,10 +7,8 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-// import { Text } from 'react-native-paper'
 import Logo from '../../components/Logo';
 import Button from '../../components/Button'
-// import TextInput from '../../components/TextInput';
 import GoBack from '../../components/GoBack';
 import { emailValidator } from '../../utils/emailValidator';
 import { passwordValidator } from '../../utils/passwordValidator';
@@ -28,9 +26,6 @@ function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
 
-  // const [email, setEmail] = useState("")
-  // const [password, setPassword] = useState("")
-
   const handleRegister = async (email, password) => {
     try {
       const response = await createUserWithEmailAndPassword(
@@ -47,21 +42,16 @@ function RegisterScreen({ navigation }) {
     }
   };
 
-  const onRegisterPressed = () => {
-    handleRegister(email.value, password.value)
-    // const emailError = emailValidator(email.value)
-    // const passwordError = passwordValidator(password.value)
-    // if (emailError || passwordError) {
-    //   setEmail({ ...email, error: emailError })
-    //   setPassword({ ...password, error: passwordError })
-    //   return
-    // } else {
-    //   handleLogin(email.value, password.value)
-    // }
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: 'Dashboard' }],
-    // })
+  const onRegisterPressed = () => {    
+    const emailError = emailValidator(email.value)
+    const passwordError = passwordValidator(password.value)
+    if (emailError || passwordError) {
+      setEmail({ ...email, error: emailError })
+      setPassword({ ...password, error: passwordError })
+      return
+    } else {
+      handleRegister(email.value, password.value)
+    }
   }
 
 
@@ -107,6 +97,10 @@ function RegisterScreen({ navigation }) {
       marginBottom: 15,
       paddingHorizontal: 0,
       fontSize: 17,
+      backgroundColor: '#ececec',
+      paddingLeft: 15,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
     },
     backBtn: {
       width: '100%',
@@ -118,6 +112,12 @@ function RegisterScreen({ navigation }) {
       fontSize: 14,
       color: colors.text,
     },
+    wrongData: {
+      color: colors.error,
+      paddingHorizontal: 25,
+      width: '100%',
+      paddingBottom: 10,
+    }
   })
 
   return (
@@ -149,10 +149,12 @@ function RegisterScreen({ navigation }) {
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
       />
+      { email.error !== '' ? <Text style={styles.wrongData}> { email.error } </Text> : null }
+      { password.error !== '' ? <Text style={styles.wrongData}> { password.error } </Text> : null }
        <Button mode="contained" onPress={() => onRegisterPressed()} style={styles.scroll}>
          Registrarse
        </Button>
-       <View style={styles.row}>
+       <View style={styles.row}>         
          <Text style={styles.currentAccount}>Ya tienes cuenta? </Text>
          <TouchableOpacity onPress={() => navigation.navigate('login')}>
            <Text style={styles.link}> Iniciar Sesión</Text>

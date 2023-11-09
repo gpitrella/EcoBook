@@ -26,13 +26,9 @@ const LottieViewAnimated = Animated.createAnimatedComponent(LottieView);
 // Get morning, afternoon, evening
 const getGreeting = () => {
   const hours = (new Date()).getHours();
-  if (hours < 12) {
-    return 'Good Morning';
-  }
-  if (hours >= 12 && hours <= 17) {
-    return 'Good Afternoon';
-  }
-  return 'Good Evening';
+  if (hours < 12) { return 'Buen día'; }
+  if (hours >= 12 && hours <= 17) { return 'Buenas Tardes'; }
+  return 'Buenas Noches';
 };
 
 // home screen
@@ -224,7 +220,7 @@ function BookListScreen({ navigation }) {
               <View style={styles.searchIcon}>
                 <AntDesign color={colors.text} name="search1" size={15} />
               </View>
-              <Text style={styles.searchText}>Find your next book...</Text>
+              <Text style={styles.searchText}> Encontra tu próximo libro...</Text>
             </Animated.View>
           </SharedElement>
         </Pressable>

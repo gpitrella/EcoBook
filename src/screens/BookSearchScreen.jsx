@@ -31,6 +31,7 @@ function BookSearchScreen({ navigation }) {
   const scrollY = useSharedValue(0);
   const loaded = useSharedValue(0);
   const [showGrid, setShowGrid] = useState(true);
+  const booksStore = useSelector((state) => state.homeSlice.books);
 
     // animate on screen load
   const onLayout = () => {
@@ -66,17 +67,19 @@ function BookSearchScreen({ navigation }) {
   // search query
   useEffect(() => {
     if (query.length > 0) {
-      axios.get(`https://www.goodreads.com/book/auto_complete?format=json&q=${query}`)
-        .then((resp) => {
-          const bks = resp.data.map((book) => ({
-            ...book,
-            imageUrl: book.imageUrl.replace(/_..../, '_SY475_'),
-          }));
-          setBooks(bks);
-        })
-        .catch((error) => {
-          Alert.alert('Failed to get books', error);
-        });
+      const bks = booksStore.filter((book) => book.title.toLocaleLowerCase().includes(query.toLocaleLowerCase()) || book.author.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) || book.description.html.toLocaleLowerCase().includes(query.toLocaleLowerCase()))
+      setBooks(bks);
+      // axios.get(`https://www.goodreads.com/book/auto_complete?format=json&q=${query}`)
+      //   .then((resp) => {
+      //     const bks = resp.data.map((book) => ({
+      //       ...book,
+      //       imageUrl: book.imageUrl.replace(/_..../, '_SY475_'),
+      //     }));
+      //     setBooks(bks);
+      //   })
+      //   .catch((error) => {
+      //     Alert.alert('Failed to get books', error);
+      //   });
     }
   }, [query]);
 
@@ -216,7 +219,7 @@ function BookSearchScreen({ navigation }) {
         style={styles.placeholderImg}
       />
       <Text center style={styles.placeholderText}>
-        You can search by book title, author, keywords etc...
+        Puedes buscar por titulo del libro, Autor, palabra cable, etc...
       </Text>
     </View>
   );
@@ -237,7 +240,7 @@ function BookSearchScreen({ navigation }) {
               autoCorrect={false}
               style={styles.textInput}
               onChangeText={(text) => setQuery(text)}
-              placeholder="Find your next book..."
+              placeholder="Encontra tu próximo libro..."
             />
           </View>
         </SharedElement>

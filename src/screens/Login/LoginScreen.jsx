@@ -93,6 +93,10 @@ function LoginScreen({ navigation }) {
       marginBottom: 15,
       paddingHorizontal: 0,
       fontSize: 17,
+      backgroundColor: '#ececec',
+      paddingLeft: 15,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
     },
     backBtn: {
       width: '100%',

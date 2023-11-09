@@ -53,13 +53,13 @@ function Books({ navigation }) {
     <ScrollView style={styles.screen} centerContent contentContainerStyle={styles.scroll}>
       <LottieView autoPlay loop style={styles.lottie} source={lottie} />
       <Text bold center style={styles.title}>
-        {'Welcome to\n EcoBook'}
+        {'Bienvenido a Recircula Libros'}
       </Text>
       <Text center style={styles.subTitle}>
         Encontra todos los libros que buscas y colabora con el planeta.
       </Text>
       <Button onPress={() => getStart()}>
-        Get Started
+        Empezar
       </Button>
     </ScrollView>
   );
