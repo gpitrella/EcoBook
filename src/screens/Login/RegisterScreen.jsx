@@ -4,8 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Pressable,
+  StyleSheet
 } from "react-native";
 import Logo from '../../components/Logo';
 import Button from '../../components/Button'
@@ -25,6 +24,7 @@ function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const [errorLogin, setErrorLogin] = useState({ error: '' })
 
   const handleRegister = async (email, password) => {
     try {
@@ -37,8 +37,8 @@ function RegisterScreen({ navigation }) {
       dispatch(setUser(response.user.email));
       dispatch(setIdToken(response._tokenResponse.idToken));
 
-    } catch (e) {
-      console.log("Error en Login", e);
+    } catch (error) {
+      setErrorLogin({ error: error });
     }
   };
 
@@ -151,6 +151,7 @@ function RegisterScreen({ navigation }) {
       />
       { email.error !== '' ? <Text style={styles.wrongData}> { email.error } </Text> : null }
       { password.error !== '' ? <Text style={styles.wrongData}> { password.error } </Text> : null }
+      { errorLogin.error !== '' ? <Text style={styles.wrongData}> { errorLogin.error } </Text> : null }
        <Button mode="contained" onPress={() => onRegisterPressed()} style={styles.scroll}>
          Registrarse
        </Button>
