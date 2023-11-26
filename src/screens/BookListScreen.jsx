@@ -135,12 +135,13 @@ function BookListScreen({ navigation }) {
     })),
     searchIcon: {
       width: 30,
-      opacity: 0.3,
+      opacity: 0.7,
     },
     searchText: {
       height: 38,
       width: '100%',
-      opacity: 0.25,
+      opacity: 0.7,
+      color: colors.text,
       lineHeight: 38,
       fontSize: 15,
     },
@@ -163,7 +164,7 @@ function BookListScreen({ navigation }) {
     topIcon: {
       position: 'absolute',
       zIndex: 100,
-      top: 35,
+      top: 50,
       right: 20,
     }
   };

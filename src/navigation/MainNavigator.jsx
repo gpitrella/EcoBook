@@ -7,6 +7,7 @@ import { useGetBooksQuery } from "../services/ecApi";
 import { useDispatch } from "react-redux";
 import { setBooks, setWishBooks } from "../redux/slice/homeSlice";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 const MainNavigator = () => {
@@ -30,8 +31,10 @@ const MainNavigator = () => {
   }
 
   return (
+    <SafeAreaProvider>
       <NavigationContainer theme={getTheme(scheme)}>{<TabNav />}        
       </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

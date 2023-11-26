@@ -27,6 +27,7 @@ import AuthNavigator from "../../navigation/AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setBooks } from "../../redux/slice/homeSlice";
+import PublishBookSearch from './PublishBookSearch';
 
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
@@ -207,6 +208,7 @@ const anims = {
   }
 };
 
+const publishMessage = 'Carga fotos de tu libro.'
 const styles = StyleSheet.create({
     header: {
       fontSize: 21,
@@ -220,7 +222,7 @@ const styles = StyleSheet.create({
       paddingBottom: status + 50,
       margin: 'auto',
       width: '100%',
-      paddingHorizontal: 40
+      paddingHorizontal: 10
     },
     scroll: {
       width: '100%',
@@ -255,8 +257,10 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     topDescription: {
-      marginBottom: 20,
-      fontSize: 16
+      marginBottom: 0,
+      paddingBottom: 0,
+      fontSize: 16,
+      paddingHorizontal: 10
     }
   })
 
@@ -274,48 +278,18 @@ const styles = StyleSheet.create({
             <View style={styles.backBtn}> 
               <GoBack navigation={navigation} />
             </View>               
-            <BookHeader scrollY={scrollY} book={newBook} pickImage={pickImage}/>        
+            <BookHeader scrollY={scrollY} book={newBook} pickImage={pickImage} publish={publishMessage}/>     
           <Animated.View style={anims.scrollView}>
             <AnimatedScrollView
               onScroll={scrollHandler}
               scrollEventThrottle={1}
               contentContainerStyle={styles.scrollContainer}
             >    
-            <Animated.View style={styles.details}>   
+            <Animated.View style={styles.details}> 
               <Text style={styles.topDescription}>
-                Ingresa toda la información de tu libro:
+                Busca el libro que deseas publicar, selecionalo y completa la información faltante para poder publicar tu libro.
               </Text>
-              <TextInput
-                  placeholder="Nombre del Libro"
-                  placeholderTextColor={colors.text}
-                  style={styles.input}
-                  value={newBook.title}
-                  onChangeText={(text) => setNewBook({...newBook, title: text , bookTitleBare: text, user: checkedUser.user})}
-              />
-              <TextInput
-                placeholder="Autor"
-                placeholderTextColor={colors.text}
-                style={styles.input}
-                value={newBook.author.name}
-                onChangeText={(text) => setNewBook({...newBook, author: { ...newBook.author, name: text}})} 
-              />
-              <TextInput
-                placeholder="Numero de páginas"
-                placeholderTextColor={colors.text}
-                keyboardType='numeric'
-                style={styles.input}
-                value={newBook.numPages}
-                onChangeText={(num) => setNewBook({...newBook, numPages: num})}
-              />
-            <TextInput
-                placeholder="Descripción"
-                placeholderTextColor={colors.text}
-                multiline={true}
-                numberOfLines={10}
-                style={{...styles.input, height:100, textAlignVertical: 'top'}}
-                value={newBook.description.html}
-                onChangeText={(text) => setNewBook({...newBook, description: { ...newBook.description, html: text}})}
-              />
+              <PublishBookSearch navigation={navigation}/>     
               <TextInput
                 placeholder="Precio"
                 keyboardType='numeric'

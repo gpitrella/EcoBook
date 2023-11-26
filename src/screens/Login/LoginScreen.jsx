@@ -87,8 +87,8 @@ function LoginScreen({ navigation }) {
     input: {
       width: "85%",
       height: 50,
-      borderColor: colors.text,
-      color: colors.text,
+      borderColor: colors.textDark,
+      color: colors.textDark,
       borderBottomWidth: 1,
       marginBottom: 15,
       paddingHorizontal: 0,
@@ -123,14 +123,14 @@ function LoginScreen({ navigation }) {
         <TextInput
             label={"Nombre"}
             placeholder="Nombre de usuario"
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.textDark}
             style={styles.input}
             value={email.value}
             onChangeText={(text) => setEmail({value: text })}
           />
         <TextInput
           placeholder="Contraseña"
-          placeholderTextColor={colors.text}
+          placeholderTextColor={colors.textDark}
           secureTextEntry
           style={styles.input}
           value={password.value}

@@ -10,30 +10,33 @@ import StatusModal from '../components/StatusModal';
 import ToastContainer from '../components/Toast';
 import { useTheme } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 
 const Tab = createBottomTabNavigator();
 
 const TabNav = () => {
     const { colors } = useTheme();
+    const insets = useSafeAreaInsets();
       
   return (
-    <>
+<>
     <Tab.Navigator 
         screenOptions={{ title: "", headerShown: false, 
           backgroundColor: '#fff',
           tabBarShowLabel: true,
           tabBarStyle:[{
-            paddingTop: 10,
-            paddingBottom: 8,
+            paddingTop: 10,            
+            paddingBottom: insets.bottom,
             marginBottom: 0,
-            minHeight: 65,
+            minHeight: 95,
             backgroundColor: '#fff',
             borderTopColor: '#dbdbdb'
           }]
-       }} 
-       
-        >
+       }}        
+      >
+            
       <Tab.Screen        
         options={{
           tabBarIcon: ({ focused }) => (

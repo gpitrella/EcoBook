@@ -5,7 +5,6 @@ import BookDetailsScreen from '../screens/BookDetailsScreen';
 import BookSearchScreen from '../screens/BookSearchScreen';
 import BookWishList from '../screens/BookWishList';
 import BookCar from '../screens/BookCar';
-import TermsAndConditions from '../screens/TermsAndConditions';
 import Address from '../screens/Address';
 import Shipping from '../screens/Shipping';
 import Payment from '../screens/Payment';
@@ -14,6 +13,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AuthNavigator from '../navigation/AuthNavigator';
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import WebViewScreen from '../screens/WebViewScreen';
 
 
 // Root Stack of App
@@ -169,6 +169,7 @@ function RootNavigator() {
             },
           }}/>
           <BookStack.Screen name="SettingsScreen" component={SettingsScreen} />
+          <BookStack.Screen name="WebView" component={WebViewScreen} />
     </BookStack.Navigator>
   );
 }

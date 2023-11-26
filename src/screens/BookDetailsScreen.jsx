@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View, Image, StatusBar, Pressable, StyleSheet,
-} from 'react-native';
+import { View, Image, StatusBar, Pressable, StyleSheet } from 'react-native';
 import Animated, {
   interpolate, withTiming, runOnJS,
   useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, useAnimatedScrollHandler,
@@ -20,6 +18,8 @@ import Button from '../components/Button';
 import BookHeader from '../components/BookHeader';
 import { setModal } from '../components/StatusModal';
 import { useSelector } from "react-redux";
+import { Avatar, ListItem, Switch } from '@rneui/themed';
+
 
 const Console = console;
 const parser = new XMLParser();
@@ -71,7 +71,6 @@ function BookDetailsScreen({ navigation, route }) {
     Haptics.selectionAsync();
     setModal(book);
   };
-
   // Scroll handler
   const scrollHandler = useAnimatedScrollHandler(({ contentOffset }) => {
     scrollY.value = contentOffset.y;
@@ -133,6 +132,7 @@ function BookDetailsScreen({ navigation, route }) {
     //   });
 
     // Book details
+   
     axios.get(`https://www.goodreads.com/book/show/${book.bookId}.xml?key=Bi8vh08utrMY3HAqM9rkWA`)
       .then((resp) => {
         const data = parser.parse(resp.data);
@@ -179,7 +179,7 @@ function BookDetailsScreen({ navigation, route }) {
       ],
     })),
   };
-
+   
   // Styles
   const styles = {
     overlay: {
@@ -256,7 +256,32 @@ function BookDetailsScreen({ navigation, route }) {
       marginHorizontal: margin,
       marginTop: 25,
       marginBottom: 10,
-    }    
+    },
+    listItemContainer: {
+      height: 'fit-content',
+      marginBottom: 30,
+      marginTop: 0,
+      paddingBottom: 0,
+      paddingHorizontal: margin - 5,
+      backgroundColor: colors.card,
+      borderRadius: 10,
+      marginHorizontal: margin,
+      opacity: 1,
+      zIndex: 100
+    },
+    listItemDetails:{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    itemDetails: {
+      minWidth: 280,
+      color: colors.text,
+      maxWidth: 300      
+    },
+    iconItems: {
+      marginBottom: 15
+    }
   };
 
   // Find book in list
@@ -321,9 +346,19 @@ function BookDetailsScreen({ navigation, route }) {
                   { fullBook?.description !== '' || fullBook?.description == undefined
                     ? fullBook?.description.replace(/(<([^>]+)>)/ig, ' ')
                     : item?.description.html.replace(/(<([^>]+)>)/ig, ' ')
-                  }
-                  
+                  }                  
                 </Text>
+              <Pressable onPress={() => navigation.navigate('WebView', { url: book.description.fullContentUrl })} >
+                <ListItem containerStyle={styles.listItemContainer} >
+                  <ListItem.Content style={styles.listItemDetails}>
+                    <View>
+                      <Text bold size={17}>Ver detalle completo del Libro: </Text>
+                      <ListItem.Subtitle size={16} style={[styles.authorDetails, styles.itemDetails]}>Comentarios, información del autor, rating, valoraciones, etc. en GoodReads</ListItem.Subtitle>
+                    </View>
+                    <AntDesign name="right" size={20} color={colors.text} style={styles.iconItems}/>
+                  </ListItem.Content>
+                </ListItem>
+              </Pressable>
                 <List books={lastBooks} title="Más libros de interés" navigation={navigation} />
               </Animated.View>
             </AnimatedScrollView>

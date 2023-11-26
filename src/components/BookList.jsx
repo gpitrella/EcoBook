@@ -1,7 +1,5 @@
-import React from 'react';
-import {
-  View, StyleSheet, FlatList, Pressable,
-} from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, FlatList, Pressable } from 'react-native';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { useTheme, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
@@ -14,6 +12,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 // horizontal flatlist of books
 function BookList({ books, title }) {
   const { width, margin, colors } = useTheme();
+  const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const scrollX = useSharedValue(0);
 
@@ -23,6 +22,15 @@ function BookList({ books, title }) {
       scrollX.value = contentOffset.x;
     },
   });
+
+  // Scroll to Top
+  const handleScrollToTop = () => {
+    console.log('SCROLL', scrollViewRef.current)
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+      
+    }
+  };
 
   // go to search screen
   const searchScreen = () => {
@@ -88,7 +96,7 @@ function BookList({ books, title }) {
         data={books}
         keyExtractor={(i) => i.bookId}
         renderItem={({ item, index }) => (
-          <Pressable>
+          <Pressable onPress={handleScrollToTop} >
             <Book book={item} index={index} scrollX={scrollX} />
           </Pressable>
         )}

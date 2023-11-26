@@ -1,4 +1,5 @@
-{
+export default ({ config }) => ({
+  ...config,
   "expo": {
     "name": "Book List",
     "slug": "book-app",
@@ -9,7 +10,12 @@
     "splash": {
       "image": "./assets/LogoEco.png",
       "resizeMode": "contain",
-      "backgroundColor": "#fff"
+      "backgroundColor": "#fff",
+      "imageResizeMode": "cover", 
+      "statusBar": {
+        "style": "dark", 
+        "backgroundColor": "#ffffff" 
+      }
     },
     "backgroundColor": "#fff",
     "updates": {
@@ -51,4 +57,4 @@
       }
     }
   }
-}
+});

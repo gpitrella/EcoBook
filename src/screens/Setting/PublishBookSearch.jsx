@@ -12,26 +12,25 @@ import LottieView from 'lottie-react-native';
 import * as Haptics from 'expo-haptics';
 import axios from 'axios';
 import Entypo from "react-native-vector-icons/Entypo";
-import Text from '../components/Text';
-import SearchBook from '../components/SearchBook';
+import Text from '../../components/Text';
+import SearchPublish from '../../components/SearchPublish';
 import { useSelector } from "react-redux";
-import { setModal } from '../components/StatusModal';
-import MainBook from '../components/MainBook';
+import { setModal } from '../../components/StatusModal';
 
-const stack = require('../anims/stack3.json');
+const stack = require('../../anims/stack3.json');
 
 // Default screen
-function BookSearchScreen({ navigation }) {
+function PublishBookSearch({ navigation }) {
   const {
     colors, height, margin, status, navbar,
   } = useTheme();
   const bookList = useSelector((state) => state.homeSlice.books);
   const [query, setQuery] = useState('');
   const [books, setBooks] = useState([]);
+  const [yourBook, setYourBook] = useState({});
+  const [selectedBook, setSelectedBook] = useState(false);
   const scrollY = useSharedValue(0);
   const loaded = useSharedValue(0);
-  const [showGrid, setShowGrid] = useState(true);
-  const booksStore = useSelector((state) => state.homeSlice.books);
 
     // animate on screen load
   const onLayout = () => {
@@ -50,18 +49,17 @@ function BookSearchScreen({ navigation }) {
     navigation.goBack();
   };
 
-  // view book details
   // hide on current screen
-  const bookDetails = (book) => {
+  const selectBook = (book) => {
     Haptics.selectionAsync();
-    navigation.navigate('BookDetails', { book });
+    setSelectedBook(true);
+    setYourBook(book);
   };
 
-  // edit selected book
-  const editStatus = (book) => {
-    setModal(book);
-    Keyboard.dismiss();
+  const deSelectBook = () => {
     Haptics.selectionAsync();
+    setSelectedBook(false);
+    setYourBook({});
   };
 
   // search query
@@ -90,11 +88,13 @@ function BookSearchScreen({ navigation }) {
       height: navbar,
       alignItems: 'flex-end',
       flexDirection: 'row',
-      paddingTop: status,
+      marginTop: 0,
+      paddingTop: 0,
       paddingBottom: 6,
-      paddingHorizontal: margin / 2,
+      paddingHorizontal: margin / 4,
       justifyContent: 'space-between',
       backgroundColor: colors.background,
+      position: 'relative',
     })),
     scrollView: useAnimatedStyle(() => ({
       opacity: interpolate(loaded.value, [0, 1], [0, 1], Extrapolate.CLAMP),
@@ -144,7 +144,8 @@ function BookSearchScreen({ navigation }) {
     },
     placeholderBox: {
       alignItems: 'center',
-      marginTop: margin * 5,
+      marginTop: margin,
+      marginBottom: 50,
       justifyContent: 'center',
     },
     placeholderImg: {
@@ -157,7 +158,7 @@ function BookSearchScreen({ navigation }) {
       paddingHorizontal: margin * 3,
     },
     scrollContainer: {
-      padding: margin,
+      padding: margin /2,
     },
     mainBook: {
       marginTop: 20,
@@ -171,14 +172,6 @@ function BookSearchScreen({ navigation }) {
     containerBook: {
       width: '50%',
       marginBottom: 20
-    },
-    containerTopChange: {
-      zIndex: 10,
-      flexDirection: 'row',
-      paddingTop: 10,
-      paddingBottom: 5,
-      paddingHorizontal: margin,
-      shadowOpacity: interpolate(scrollY.value, [0, 20], [0, 0.75], Extrapolate.CLAMP),
     },
     rowItem: {
       flex: 1,
@@ -199,15 +192,16 @@ function BookSearchScreen({ navigation }) {
       marginLeft: 10,
       width: '100%'
     },
-  });
-  // change View Books
-  const changeView = () => {
-    if(showGrid) {
-      setShowGrid(false);
-    } else {
-      setShowGrid(true);
+    changeBook: {
+      width: '100%',
+      textAlign: 'right',
+      marginBottom: 20,
+      marginTop: 10,
+      fontSize: 16,
+      paddingRight: 5
     }
-  };
+  });
+
   // empty screen placeholders
   const PlaceHolder = () => (
     <View style={styles.placeholderBox}>
@@ -227,46 +221,25 @@ function BookSearchScreen({ navigation }) {
   // render search page
   return (
     <View onLayout={onLayout} style={styles.screen}>
-      <Animated.View style={anims.search}>
-        <SharedElement style={styles.sharedElement} id="search">
-          <View size={15} style={styles.searchInput}>
-            <View style={styles.searchIcon}>
-              <AntDesign color={colors.text} name="search1" size={15} />
+      { !selectedBook ? 
+        <Animated.View style={anims.search}>
+          <SharedElement style={styles.sharedElement} id="search">
+            <View size={15} style={styles.searchInput}>
+              <View style={styles.searchIcon}>
+                <AntDesign color={colors.text} name="search1" size={15} />
+              </View>
+              <TextInput                
+                width="100%"
+                value={query}
+                autoCorrect={false}
+                style={styles.textInput}
+                onChangeText={(text) => setQuery(text)}
+                placeholder="Busca tu libro..."
+              />
             </View>
-            <TextInput
-              autoFocus
-              width="100%"
-              value={query}
-              autoCorrect={false}
-              style={styles.textInput}
-              onChangeText={(text) => setQuery(text)}
-              placeholder="Encontra tu próximo libro..."
-            />
-          </View>
-        </SharedElement>
-        <Pressable onPress={goBack}>
-          <Text bold style={styles.saveButton}>Done</Text>
-        </Pressable>
-      </Animated.View>
-      {books.length > 0 && 
-      <Animated.View style={styles.containerTopChange}>
-        <View style={styles.rowItem}>
-          <Entypo name={'magnifying-glass'} size={24} color={'#52B788'} />
-          <Text style={styles.wishlistTitle}>
-            Resultados busqueda
-          </Text>
-        </View>
-        <View style={styles.rowItem1}>
-          <Pressable onPress={() => changeView()} >
-            <Entypo name={'grid'} size={30} color={showGrid ? '#dbdbdb' : '#52B788'} />
-          </Pressable>
-          <Pressable onPress={() => changeView()} >
-            <Entypo name={'list'} size={29} color={!showGrid ? '#dbdbdb' : '#52B788'} />
-          </Pressable>
-        </View>
-      </Animated.View> }
-
-      { showGrid ? 
+          </SharedElement>
+        </Animated.View> 
+      : null }
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={1}
@@ -276,38 +249,28 @@ function BookSearchScreen({ navigation }) {
         style={anims.scrollView}
       >
         {!books.length && <PlaceHolder />}      
-        {books.map((book) => (
-          <Pressable
-            key={book.bookId}
-            onPress={() => bookDetails(book)}
-            onLongPress={() => editStatus(book)}
-          >
-            <SearchBook book={book} bookList={bookList}/>
-          </Pressable>
+        {!yourBook.bookId && books.map((book) => (
+            <Pressable
+              key={book.bookId}
+              onPress={() => selectBook(book)}
+            >
+              <SearchPublish book={book} bookList={bookList} selectedBook={selectedBook}/>
+            </Pressable>          
         ))}
+         {yourBook.bookId && 
+          <>
+            <SearchPublish book={yourBook} bookList={bookList} selectedBook={selectedBook}/>
+            <Pressable
+              key={yourBook.bookId}
+              onPress={() => deSelectBook(yourBook)}
+            >              
+                <Text bold style={styles.changeBook}>Cambiar Libro</Text>
+            </Pressable>     
+          </>     
+        }
       </Animated.ScrollView> 
-      : <Animated.ScrollView
-          onScroll={scrollHandler}
-          scrollEventThrottle={1}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={styles.mainBook}
-          style={anims.scrollView}
-        > 
-      {books.map((book, index) => (
-        <View style={styles.containerBook} key={index}>
-          <Pressable
-            key={book.bookId}
-            onPress={() => bookDetails(book)}
-            onLongPress={() => editStatus(book)}
-          >
-            <MainBook book={book} bookList={'all'} index={index}/>
-          </Pressable>
-        </View>
-      ))}
-    </Animated.ScrollView> }
     </View>
   );
 }
 
-export default React.memo(BookSearchScreen);
+export default React.memo(PublishBookSearch);

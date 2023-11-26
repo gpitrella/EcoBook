@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View, Image, StyleSheet, LayoutAnimation, Pressable,
 } from 'react-native';
@@ -9,7 +9,6 @@ import Animated, {
 import { useTheme, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SharedElement } from 'react-navigation-shared-element';
 import * as Haptics from 'expo-haptics';
-
 import Text from './Text';
 import { setModal } from './StatusModal';
 

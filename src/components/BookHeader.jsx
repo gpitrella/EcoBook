@@ -8,7 +8,7 @@ import { useTheme } from '@react-navigation/native';
 import Text from './Text';
 
 // Load a single book
-function BookHeader({ scrollY, book, pickImage }) {
+function BookHeader({ scrollY, book, pickImage, publish }) {
   const {
     width, margin, colors, normalize, navbar, status,
   } = useTheme();
@@ -104,6 +104,7 @@ function BookHeader({ scrollY, book, pickImage }) {
       </Animated.View>
 
       <Animated.View style={anims.title}>
+        { publish ? <Text bold center size={21} numberOfLines={2}>{publish}</Text> : null }
         { book.bookTitleBare !== '' ? <Text bold center size={21} numberOfLines={2}>{book.bookTitleBare}</Text> : null }
         { book.author.name !== '' ? <Text size={17} style={styles.author}>{`by ${book.author.name}`}</Text> : null }
       </Animated.View>
