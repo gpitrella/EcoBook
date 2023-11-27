@@ -57,16 +57,19 @@ function PublishBook({ navigation }) {
   const [checkedUser, setCheckedUser] = useState({ user: null, token: null});
   const user = useSelector((state) => state.authSlice.user);
   const idToken = useSelector((state) => state.authSlice.idToken);
-  
+  const [yourSelectedBook, setYourSelectedBook] = useState({})
 
   useEffect(() => {
-    // Generate Random Number
-    const date = new Date();  
-    const result = date.getTime() / 1000000;
-    const randomNumber = Math.random();
-    const idBookRef = Math.round(result * randomNumber).toString();
-    setNewBook({...newBook, bookId: idBookRef})
-  },[]);
+    if (yourSelectedBook.bookId) {
+      setNewBook({...newBook, 
+        bookId: yourSelectedBook.bookId,
+        avgRating: yourSelectedBook.avgRating,
+        title: yourSelectedBook.title,
+        author: { ...newBook.author, id: yourSelectedBook.author.id },
+        imageUrl: avatarLoad !== '' ? avatarLoad : avatar,
+      })
+    }
+  },[yourSelectedBook]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -84,35 +87,15 @@ function PublishBook({ navigation }) {
   const [newBook, setNewBook] = useState({
     "author": {
       "id": 947,
-      "isGoodreadsAuthor": false,
-      "name": "",
-      "profileUrl": "https://www.goodreads.com/author/show/947.William_Shakespeare",
-      "worksListUrl": "https://www.goodreads.com/author/list/947.William_Shakespeare",
     },
     "avgRating": "3.74",
-    "bookId": "",
-    "bookTitleBare": "",
-    "bookUrl": "/book/show/18135.Romeo_and_Juliet",
-    "description": {
-      "fullContentUrl": "https://www.goodreads.com/book/show/18135.Romeo_and_Juliet",
-      "html": "",  
-      "truncated": true,
-    },
-    "from_search": true,
-    "from_srp": true,
+    "bookId": '',
     "imageUrl": avatarLoad !== '' ? avatarLoad : avatar,
-    "kcrPreviewUrl": null,
-    "numPages": null,
-    "qid": "vor8u0qVu8",
-    "rank": 1,
-    "ratingsCount": null,
-    "status": "Completed",
-    "title": "",
-    "workId": "3349450",
-    "user": 'without user'
+    "price": ''
   });
   
   const onPublishBook = async () => {
+    console.log('NEW BOOK: ', newBook)
     await putBook(newBook);
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
@@ -289,14 +272,14 @@ const styles = StyleSheet.create({
               <Text style={styles.topDescription}>
                 Busca el libro que deseas publicar, selecionalo y completa la información faltante para poder publicar tu libro.
               </Text>
-              <PublishBookSearch navigation={navigation}/>     
+              <PublishBookSearch navigation={navigation} setYourSelectedBook={setYourSelectedBook}/>     
               <TextInput
                 placeholder="Precio"
                 keyboardType='numeric'
                 placeholderTextColor={colors.text}
                 style={styles.input}
-                value={newBook.ratingsCount}
-                onChangeText={(num) => setNewBook({...newBook, ratingsCount: num})}
+                value={newBook.price}
+                onChangeText={(num) => setNewBook({...newBook, price: num})}
               />
               <Button mode="contained" onPress={() => onPublishBook(newBook)} style={styles.scroll}>
                 Publicar Libro

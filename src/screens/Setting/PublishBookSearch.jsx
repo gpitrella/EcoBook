@@ -20,7 +20,7 @@ import { setModal } from '../../components/StatusModal';
 const stack = require('../../anims/stack3.json');
 
 // Default screen
-function PublishBookSearch({ navigation }) {
+function PublishBookSearch({ navigation, setYourSelectedBook }) {
   const {
     colors, height, margin, status, navbar,
   } = useTheme();
@@ -54,6 +54,7 @@ function PublishBookSearch({ navigation }) {
     Haptics.selectionAsync();
     setSelectedBook(true);
     setYourBook(book);
+    setYourSelectedBook(book);
   };
 
   const deSelectBook = () => {

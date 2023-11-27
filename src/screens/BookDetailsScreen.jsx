@@ -29,7 +29,7 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 function BookDetailsScreen({ navigation, route }) {
   const { book } = route.params;
   const bookList = useSelector((state) => state.homeSlice.books);
-  const [related, setRelated] = useState([]);
+  // const [related, setRelated] = useState([]);
   const [fullBook, setFullBook] = useState(null);
   const [author, setAuthor] = useState(null);
   const [enabled, setEnabled] = useState(true);
@@ -115,6 +115,7 @@ function BookDetailsScreen({ navigation, route }) {
       setLastBooks(reversed);
     }  
   }, [books]);
+  
   useEffect(() => { getIcon() }, [index, indexCar]);
   // // Load book details
   useEffect(() => {
@@ -261,7 +262,7 @@ function BookDetailsScreen({ navigation, route }) {
       height: 'fit-content',
       marginBottom: 30,
       marginTop: 0,
-      paddingBottom: 0,
+      paddingBottom: margin - 5,
       paddingHorizontal: margin - 5,
       backgroundColor: colors.card,
       borderRadius: 10,
@@ -277,10 +278,8 @@ function BookDetailsScreen({ navigation, route }) {
     itemDetails: {
       minWidth: 280,
       color: colors.text,
-      maxWidth: 300      
-    },
-    iconItems: {
-      marginBottom: 15
+      maxWidth: 300,
+      opacity: 0.75, 
     }
   };
 
@@ -314,13 +313,9 @@ function BookDetailsScreen({ navigation, route }) {
                   <Text bold style={styles.subDetails}>{book.avgRating}</Text>
                 </View>
                 <View style={[styles.detailsRow, styles.detailsRowBorder]}>
-                  <Text center size={13}>PAGES</Text>
+                  <Text center size={13}>PAGINAS</Text>
                   <Text bold style={styles.subDetails}>{book.numPages}</Text>
                 </View>
-                <Pressable onPress={openSheet} style={styles.detailsRow}>
-                  <Text center size={13}>STATUS</Text>
-                  <Text bold color={colors.primary} style={styles.subDetails}>{item ? item.status : '-'}</Text>
-                </Pressable>
                 <View style={[styles.detailsRow, styles.detailsRowBorder]}>
                   <Text center size={13}>PRECIO</Text>
                   <Text bold style={styles.subDetails}>$ {book.ratingsCount}</Text>
@@ -334,7 +329,7 @@ function BookDetailsScreen({ navigation, route }) {
                   <Image source={{ uri: author?.image_url }} style={styles.authorImage} />
                   <View>
                     <Text bold size={17}>{author?.name || '...'}</Text>
-                    <Text numberOfLines={2} style={styles.authorDetails}>
+                    <Text numberOfLines={4} style={styles.authorDetails}>
                       {author?.about.replace(/(<([^>]+)>)/ig, '')}
                     </Text>
                   </View>
@@ -343,23 +338,20 @@ function BookDetailsScreen({ navigation, route }) {
                    <Text bold size={17}>Descripción:</Text>
                 </View>
                 <Text size={16} numberOfLines={10} style={styles.aboutBook}>
-                  { fullBook?.description !== '' || fullBook?.description == undefined
-                    ? fullBook?.description.replace(/(<([^>]+)>)/ig, ' ')
-                    : item?.description.html.replace(/(<([^>]+)>)/ig, ' ')
-                  }                  
+                  { fullBook?.description.replace(/(<([^>]+)>)/ig, ' ') }
                 </Text>
               <Pressable onPress={() => navigation.navigate('WebView', { url: book.description.fullContentUrl })} >
                 <ListItem containerStyle={styles.listItemContainer} >
                   <ListItem.Content style={styles.listItemDetails}>
                     <View>
                       <Text bold size={17}>Ver detalle completo del Libro: </Text>
-                      <ListItem.Subtitle size={16} style={[styles.authorDetails, styles.itemDetails]}>Comentarios, información del autor, rating, valoraciones, etc. en GoodReads</ListItem.Subtitle>
+                      <ListItem.Subtitle size={16} style={styles.itemDetails}>Comentarios, información del autor, rating, valoraciones, etc. en GoodReads</ListItem.Subtitle>
                     </View>
-                    <AntDesign name="right" size={20} color={colors.text} style={styles.iconItems}/>
+                    <AntDesign name="right" size={20} color={colors.text} />
                   </ListItem.Content>
                 </ListItem>
               </Pressable>
-                <List books={lastBooks} title="Más libros de interés" navigation={navigation} />
+              <List books={lastBooks} title="Más libros de interés" navigation={navigation} />
               </Animated.View>
             </AnimatedScrollView>
 

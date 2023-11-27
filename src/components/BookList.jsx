@@ -23,15 +23,6 @@ function BookList({ books, title }) {
     },
   });
 
-  // Scroll to Top
-  const handleScrollToTop = () => {
-    console.log('SCROLL', scrollViewRef.current)
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ y: 0, animated: true });
-      
-    }
-  };
-
   // go to search screen
   const searchScreen = () => {
     navigation.push('BookSearch');
@@ -96,9 +87,7 @@ function BookList({ books, title }) {
         data={books}
         keyExtractor={(i) => i.bookId}
         renderItem={({ item, index }) => (
-          <Pressable onPress={handleScrollToTop} >
             <Book book={item} index={index} scrollX={scrollX} />
-          </Pressable>
         )}
         ListEmptyComponent={<EmptyList />}
       />

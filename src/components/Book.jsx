@@ -27,6 +27,7 @@ function Book({ book, scrollX, index }) {
   const bookDetails = () => {
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
+    navigation.goBack();
     navigation.navigate('BookDetails', { book });
   };
 
