@@ -285,7 +285,6 @@ function BookDetailsScreen({ navigation, route }) {
 
   // Find book in list
   const item = bookList.find((b) => b.bookId === book.bookId);
-
   // Render book details
   return (
       <PanGestureHandler
@@ -298,7 +297,7 @@ function BookDetailsScreen({ navigation, route }) {
       >
         <Animated.View style={anims.screen}>
           {ios && <StatusBar hidden={useIsFocused()} animated />}
-          <BookHeader scrollY={scrollY} book={book} />
+          <BookHeader scrollY={scrollY} book={book} fullBook={fullBook}/>
           <AntDesign size={27} name="close" onPress={goBack} style={styles.closeIcon} />
 
           <Animated.View style={anims.scrollView}>
@@ -314,11 +313,11 @@ function BookDetailsScreen({ navigation, route }) {
                 </View>
                 <View style={[styles.detailsRow, styles.detailsRowBorder]}>
                   <Text center size={13}>PAGINAS</Text>
-                  <Text bold style={styles.subDetails}>{book.numPages}</Text>
+                  <Text bold style={styles.subDetails}>{fullBook?.num_pages}</Text>
                 </View>
                 <View style={[styles.detailsRow, styles.detailsRowBorder]}>
                   <Text center size={13}>PRECIO</Text>
-                  <Text bold style={styles.subDetails}>$ {book.ratingsCount}</Text>
+                  <Text bold style={styles.subDetails}>$ {book.price}</Text>
                 </View>
               </View>
               <Button onPress={() => navigation.navigate('Address', { book })} style={styles.scroll}>
@@ -340,7 +339,7 @@ function BookDetailsScreen({ navigation, route }) {
                 <Text size={16} numberOfLines={10} style={styles.aboutBook}>
                   { fullBook?.description.replace(/(<([^>]+)>)/ig, ' ') }
                 </Text>
-              <Pressable onPress={() => navigation.navigate('WebView', { url: book.description.fullContentUrl })} >
+              <Pressable onPress={() => navigation.navigate('WebView', { url: fullBook.url })} >
                 <ListItem containerStyle={styles.listItemContainer} >
                   <ListItem.Content style={styles.listItemDetails}>
                     <View>
@@ -351,7 +350,7 @@ function BookDetailsScreen({ navigation, route }) {
                   </ListItem.Content>
                 </ListItem>
               </Pressable>
-              <List books={lastBooks} title="Más libros de interés" navigation={navigation} />
+              <List books={lastBooks} title="Más libros de interés" navigation={navigation} cameFromDetails={true} />
               </Animated.View>
             </AnimatedScrollView>
 

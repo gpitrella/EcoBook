@@ -27,12 +27,11 @@ import AuthNavigator from "../../navigation/AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setBooks } from "../../redux/slice/homeSlice";
-import PublishBookSearch from './PublishBookSearch';
-
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-function PublishBook({ navigation }) {
+function PublishBookSecond({ navigation, route }) {
+  const { yourBook } = route.params;
 
   const {
     margin, width, dark, colors, normalize, status, ios,
@@ -42,10 +41,8 @@ function PublishBook({ navigation }) {
   const dispatch = useDispatch();
   const { data: booksapi, isLoading, isError, error } = useGetBooksQuery();
   const panRef = useRef();
-  const [avatarLoad, setAvatarLoad] = useState('');
   const [enabled, setEnabled] = useState(true);
   const HEADER = normalize(width + status, 500) + margin;
-  const avatar = 'https://variety.com/wp-content/uploads/2021/04/Avatar.jpg';
   const opacity = useSharedValue(1);
   const y = useSharedValue(0);
   const x = useSharedValue(0);
@@ -57,19 +54,28 @@ function PublishBook({ navigation }) {
   const [checkedUser, setCheckedUser] = useState({ user: null, token: null});
   const user = useSelector((state) => state.authSlice.user);
   const idToken = useSelector((state) => state.authSlice.idToken);
-  const [yourSelectedBook, setYourSelectedBook] = useState({})
+  const [errorInfo, setErrorInfo] = useState({ error: '' });
+  const [bgsUpload, setBgsUpload] = useState([
+    "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png",
+    "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png",
+    "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png",
+    "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png"
+  ])
+  const bgUpload = "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png";
+
 
   useEffect(() => {
-    if (yourSelectedBook.bookId) {
+    if (yourBook.bookId) {
       setNewBook({...newBook, 
-        bookId: yourSelectedBook.bookId,
-        avgRating: yourSelectedBook.avgRating,
-        title: yourSelectedBook.title,
-        author: { ...newBook.author, id: yourSelectedBook.author.id },
-        imageUrl: avatarLoad !== '' ? avatarLoad : avatar,
+        bookId: yourBook.bookId,
+        avgRating: yourBook.avgRating,
+        title: yourBook.title,
+        author: { ...newBook.author, id: yourBook.author.id, name: yourBook.author.name },
+        imagesUrl: bgsUpload.filter((element) => element !== bgUpload),
+        seller: user  
       })
     }
-  },[yourSelectedBook]);
+  },[yourBook, bgsUpload]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -87,15 +93,19 @@ function PublishBook({ navigation }) {
   const [newBook, setNewBook] = useState({
     "author": {
       "id": 947,
+      "name": ''
     },
     "avgRating": "3.74",
     "bookId": '',
-    "imageUrl": avatarLoad !== '' ? avatarLoad : avatar,
-    "price": ''
+    "imageUrl": '',
+    "imagesUrl": [],
+    "price": '',
+    "seller": '',
+    "status": 'processing',
+    "condition": 'good'
   });
   
   const onPublishBook = async () => {
-    console.log('NEW BOOK: ', newBook)
     await putBook(newBook);
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
@@ -103,30 +113,31 @@ function PublishBook({ navigation }) {
     !isLoading && booksapi !== undefined ? dispatch(setBooks(booksapi)) : null;
   }
 
-
-
-  const pickImage = async () => {
+  const pickImage = async (index) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [3, 4],
+      aspect: [4, 3],
       quality: 1,
       // base64: true,
     });
 
     if (!result.canceled) {
-      // setAvatarLoad(`data:image/jpeg;base64,${result.assets[0].base64}`);
-      setAvatarLoad(result.assets[0].uri)
-      setNewBook({...newBook, imageUrl: result.assets[0].uri})
-      // console.log('IMAGEN PNG: ', imageComverted)
-      // setNewBook({...newBook, imageUrl: avatarLoad})
-      // await putImage({
-      //   image: `data:image/jpeg;base64,${result.assets[0].base64}`,
-      // });
-
-      // refetch();
+      bgsUpload.splice(index, 1)
+      bgsUpload.splice(index, 0, result.assets[0].uri)
+      setBgsUpload([...bgsUpload])
     }
-  };
+};
+
+const checkerPublish = () => {
+  const countImages = bgsUpload.filter((element) => element !== bgUpload)
+  if(countImages.length === 0) setErrorInfo({ error: "Debes cargar las fotos de tu libro." })
+  else if(newBook.price == '') setErrorInfo({ error: "Debes ingresar un valor de tu libro."  }) 
+  else { 
+    setErrorInfo({ error: "" })
+    onPublishBook() 
+  }
+}
 
 // Go back to previous screen
 const goBack = () => {
@@ -229,21 +240,34 @@ const styles = StyleSheet.create({
     backBtn: {
       width: '100%',
       position: 'absolute',
-      marginTop: 50,
+      paddingTop: 50,
       zIndex: 100,
       top: 0,
+      backgroundColor: '#fff'
     },
     details: { 
       width: '100%',
       textAlign: 'center',
       margin: 'auto',
       justifyContent: 'center',
+      paddingHorizontal: 20,
     },
     topDescription: {
       marginBottom: 0,
-      paddingBottom: 0,
+      paddingBottom: 10,
       fontSize: 16,
-      paddingHorizontal: 10
+      paddingHorizontal: 20,
+      paddingTop: 0,
+      backgroundColor: '#fff'
+    },
+    titleDetails: {
+      paddingBottom: 10,
+      fontSize: 16,
+    },
+    errorDetails: {
+      paddingBottom: 10,
+      fontSize: 16,
+      color: colors.error
     }
   })
 
@@ -260,19 +284,22 @@ const styles = StyleSheet.create({
       <Animated.View style={anims.screen}>
             <View style={styles.backBtn}> 
               <GoBack navigation={navigation} />
-            </View>               
-            <BookHeader scrollY={scrollY} book={newBook} pickImage={pickImage} publish={publishMessage}/>     
+              <Text style={styles.topDescription}>
+                Carga las fotos de tu libro Portada, contratapa y foto de detalles importantes. 
+                Completa a continuación la información para la publicación.
+              </Text>             
+            </View>  
+            <BookHeader scrollY={scrollY} book={newBook} bgsUpload={bgsUpload} pickImage={pickImage} publish={publishMessage} bgUpload={bgUpload} />     
           <Animated.View style={anims.scrollView}>
             <AnimatedScrollView
               onScroll={scrollHandler}
               scrollEventThrottle={1}
               contentContainerStyle={styles.scrollContainer}
             >    
-            <Animated.View style={styles.details}> 
-              <Text style={styles.topDescription}>
-                Busca el libro que deseas publicar, selecionalo y completa la información faltante para poder publicar tu libro.
-              </Text>
-              <PublishBookSearch navigation={navigation} setYourSelectedBook={setYourSelectedBook}/>     
+            <Animated.View style={styles.details}>  
+              <Text style={styles.titleDetails}>
+                Información requerida para publicar tu libro:
+              </Text>    
               <TextInput
                 placeholder="Precio"
                 keyboardType='numeric'
@@ -281,7 +308,11 @@ const styles = StyleSheet.create({
                 value={newBook.price}
                 onChangeText={(num) => setNewBook({...newBook, price: num})}
               />
-              <Button mode="contained" onPress={() => onPublishBook(newBook)} style={styles.scroll}>
+              { errorInfo.error != '' && 
+              <Text style={styles.errorDetails}>
+                *{ errorInfo.error }
+              </Text> }
+              <Button mode="contained" onPress={() => checkerPublish()} style={styles.scroll}>
                 Publicar Libro
               </Button>
               </Animated.View> 
@@ -292,4 +323,4 @@ const styles = StyleSheet.create({
    </>)
 };
 
-export default React.memo(PublishBook);
+export default React.memo(PublishBookSecond);

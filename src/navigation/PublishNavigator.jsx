@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
-const SettingsNavigator = () => {
+const PublishNavigator = () => {
 
   const [checkedUser, setCheckedUser] = useState({ user: null, token: null});
   const user = useSelector((state) => state.authSlice.user);
@@ -32,14 +32,13 @@ const SettingsNavigator = () => {
   
   return (<>
     { !checkedUser.user && !checkedUser.token ? <AuthNavigator /> :
-      <Stack.Navigator initialRouteName="settings" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="settings" component={Settings} />
-        <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
-        <Stack.Screen name="yourPublishBook" component={YourPublishBook} />
+      <Stack.Navigator initialRouteName="publishBookFirst" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="publishBookFirst" component={PublishBookFirst} />
+        <Stack.Screen name="publishBookSecond" component={PublishBookSecond} />
       </Stack.Navigator>
      }
   </>
   );
 };
 
-export default SettingsNavigator;
+export default PublishNavigator;

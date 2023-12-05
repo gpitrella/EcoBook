@@ -153,20 +153,30 @@ function BookListScreen({ navigation }) {
       flexDirection: 'row',
       flexWrap: 'wrap',
       alignItems: 'flex-start',
+      justifyContent: 'center',
       marginLeft: 20,
       marginRight: 20,
       alignContent: 'space-around'
     },
     containerBook: {
       width: '50%',
-      marginBottom: 20
+      margin: 'auto',
+      marginHorizontal: 'auto',
+      textAlign: 'center',
+      justifyContent: 'center',
     },
     topIcon: {
       position: 'absolute',
       zIndex: 100,
       top: 50,
       right: 20,
-    }
+    },
+    headingText: {
+      fontSize: 18,
+      fontWeight: 600,
+      marginHorizontal: 20,
+      marginBottom: 20
+    },
   };
   // show WishBook screen
   const bookWishList = () => {
@@ -233,6 +243,7 @@ function BookListScreen({ navigation }) {
         contentContainerStyle={styles.scrollView}
       >
         <BookList books={lastBooks} title="Ultimos libros publicados" />
+        <Text size={17} style={styles.headingText} >Mas libros de interés</Text>
         <View style={styles.mainBook}>
           {books?.map((book, index) => (
             <View style={styles.containerBook} key={index}>

@@ -11,19 +11,16 @@ import { AntDesign } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import * as Haptics from 'expo-haptics';
 import axios from 'axios';
-import Entypo from "react-native-vector-icons/Entypo";
 import Text from '../../components/Text';
 import SearchPublish from '../../components/SearchPublish';
 import { useSelector } from "react-redux";
-import { setModal } from '../../components/StatusModal';
+import Button from '../../components/Button';
 
 const stack = require('../../anims/stack3.json');
 
 // Default screen
 function PublishBookSearch({ navigation, setYourSelectedBook }) {
-  const {
-    colors, height, margin, status, navbar,
-  } = useTheme();
+  const { colors, height, margin, navbar } = useTheme();
   const bookList = useSelector((state) => state.homeSlice.books);
   const [query, setQuery] = useState('');
   const [books, setBooks] = useState([]);
@@ -42,13 +39,6 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
     scrollY.value = event.contentOffset.y;
   });
 
-  // go to home screen
-  const goBack = () => {
-    loaded.value = withTiming(0);
-    Haptics.selectionAsync();
-    navigation.goBack();
-  };
-
   // hide on current screen
   const selectBook = (book) => {
     Haptics.selectionAsync();
@@ -66,8 +56,6 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
   // search query
   useEffect(() => {
     if (query.length > 0) {
-      // const bks = booksStore.filter((book) => book.title.toLocaleLowerCase().includes(query.toLocaleLowerCase()) || book.author.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) || book.description.html.toLocaleLowerCase().includes(query.toLocaleLowerCase()))
-      // setBooks(bks);
       axios.get(`https://www.goodreads.com/book/auto_complete?format=json&q=${query}`)
         .then((resp) => {
           const bks = resp.data.map((book) => ({
@@ -113,7 +101,7 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
     },
     sharedElement: {
       flex: 1,
-      height: 38,
+      height: 38      
     },
     searchIcon: {
       width: 30,
@@ -122,10 +110,13 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
     searchInput: {
       flex: 1,
       height: 38,
+      position: 'relative',
+      top: -10,
       fontSize: 15,
       borderRadius: 20,
       color: colors.text,
       paddingHorizontal: margin,
+      marginHorizontal: 10,
       backgroundColor: colors.card,
       flexDirection: 'row',
       alignItems: 'center',
@@ -200,7 +191,15 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
       marginTop: 10,
       fontSize: 16,
       paddingRight: 5
-    }
+    },
+    topDescription: {
+      marginBottom: 0,
+      paddingBottom: 10,
+      fontSize: 16,
+      paddingHorizontal: 20,
+      paddingTop: 80,
+      backgroundColor: '#fff'
+    },
   });
 
   // empty screen placeholders
@@ -222,6 +221,9 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
   // render search page
   return (
     <View onLayout={onLayout} style={styles.screen}>
+      <Text style={styles.topDescription}>
+        Busca el libro que deseas publicar, selecionalo y continua completando la información faltante para poder publicar tu libro.
+      </Text>
       { !selectedBook ? 
         <Animated.View style={anims.search}>
           <SharedElement style={styles.sharedElement} id="search">
@@ -235,7 +237,7 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
                 autoCorrect={false}
                 style={styles.textInput}
                 onChangeText={(text) => setQuery(text)}
-                placeholder="Busca tu libro..."
+                placeholder="Busca tu libro a publicar ..."
               />
             </View>
           </SharedElement>
@@ -269,6 +271,10 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
             </Pressable>     
           </>     
         }
+        { selectedBook ? 
+        <Button mode="contained" onPress={() => navigation.navigate('publishBookSecond', { yourBook })} style={styles.scroll}>
+          Continuar
+        </Button> : null }
       </Animated.ScrollView> 
     </View>
   );

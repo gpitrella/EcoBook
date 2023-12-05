@@ -10,7 +10,7 @@ import Book from './Book';
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 // horizontal flatlist of books
-function BookList({ books, title }) {
+function BookList({ books, title, cameFromDetails }) {
   const { width, margin, colors } = useTheme();
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
@@ -87,7 +87,7 @@ function BookList({ books, title }) {
         data={books}
         keyExtractor={(i) => i.bookId}
         renderItem={({ item, index }) => (
-            <Book book={item} index={index} scrollX={scrollX} />
+            <Book book={item} index={index} scrollX={scrollX} cameFromDetails={cameFromDetails}/>
         )}
         ListEmptyComponent={<EmptyList />}
       />

@@ -3,15 +3,14 @@ import { Entypo } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RootNavigator from "./RootNavigator";
 import SettingsNavigator from "./SettingsNavigator";
+import PublishNavigator from "./PublishNavigator";
 import BookSearchScreen from "../screens/BookSearchScreen";
-import PublishBook from "../screens/Setting/PublishBook";
 import BookCar from "../screens/BookCar";
 import StatusModal from '../components/StatusModal';
 import ToastContainer from '../components/Toast';
 import { useTheme } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 
 
 const Tab = createBottomTabNavigator();
@@ -21,7 +20,7 @@ const TabNav = () => {
     const insets = useSafeAreaInsets();
       
   return (
-<>
+  <>
     <Tab.Navigator 
         screenOptions={{ title: "", headerShown: false, 
           backgroundColor: '#fff',
@@ -79,8 +78,8 @@ const TabNav = () => {
           tabBarShowLabel: true,
           tabBarLabel: 'Vender',
         }}
-        name="publishBook"
-        component={PublishBook}
+        name="publishNavigator"
+        component={PublishNavigator}
       />
       <Tab.Screen
         options={{

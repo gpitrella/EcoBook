@@ -13,7 +13,7 @@ import Text from './Text';
 import { setModal } from './StatusModal';
 
 // single book component
-function Book({ book, scrollX, index }) {
+function Book({ book, scrollX, index, cameFromDetails }) {
   const navigation = useNavigation();
   const { margin, normalize } = useTheme();
   const BOOKW = normalize(150, 150);
@@ -27,7 +27,7 @@ function Book({ book, scrollX, index }) {
   const bookDetails = () => {
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
-    navigation.goBack();
+    if(cameFromDetails) { navigation.goBack(); }
     navigation.navigate('BookDetails', { book });
   };
 
@@ -54,6 +54,10 @@ function Book({ book, scrollX, index }) {
   const anims = {
     book: useAnimatedStyle(() => ({
       opacity: opacity.value,
+      width: '100%',
+      margin: 'auto',
+      display: 'flex',
+      justifyContent: 'center',
       transform: [
         { perspective: 800 },
         { scale: interpolate(position.value, inputRange, [0.9, 1, 1, 1], Extrapolate.CLAMP) },
@@ -81,6 +85,8 @@ function Book({ book, scrollX, index }) {
       width: BOOKW,
       height: BOOKH,
       borderRadius: 10,
+      margin: 'auto',
+
     },
     bookText: {
       width: BOOKW,
@@ -94,14 +100,14 @@ function Book({ book, scrollX, index }) {
       <Animated.View style={anims.book}>
         <SharedElement id={book.bookId}>
           <View style={styles.imgBox}>
-            <Image style={styles.bookImg} source={{ uri: book.imageUrl }} />
+            <Image style={styles.bookImg} source={{ uri: book.imagesUrl[0] }} />
           </View>
         </SharedElement>
         <Text weight={700} size={16} numberOfLines={2} left style={styles.bookText}>
           {book.title}
         </Text>
         <Text size={14} numberOfLines={1} left style={styles.bookText}>
-        ⭐ {book.avgRating} - $ {book.ratingsCount}
+        ⭐ {book.avgRating} - $ {book.price}
         </Text>
       </Animated.View>
     </Pressable>

@@ -9,6 +9,8 @@ import Address from '../screens/Address';
 import Shipping from '../screens/Shipping';
 import Payment from '../screens/Payment';
 import SettingsScreen from '../screens/Setting/Settings';
+import PublishBookFirst from '../screens/Setting/PublishBookFirst';
+import PublishBookSecond from '../screens/Setting/PublishBookSecond';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AuthNavigator from '../navigation/AuthNavigator';
 import { useSelector } from "react-redux";
@@ -169,6 +171,8 @@ function RootNavigator() {
             },
           }}/>
           <BookStack.Screen name="SettingsScreen" component={SettingsScreen} />
+          <BookStack.Screen name="PublishBookFirst" component={PublishBookFirst} />
+          <BookStack.Screen name="PublishBookSecond" component={PublishBookSecond} />
           <BookStack.Screen name="WebView" component={WebViewScreen} />
     </BookStack.Navigator>
   );

@@ -8,16 +8,29 @@ import { useDispatch } from "react-redux";
 import { setBooks, setWishBooks } from "../redux/slice/homeSlice";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { setIdToken, setUser } from "../redux/slice/authSlice";
 
 
 const MainNavigator = () => {
   const scheme = useColorScheme();
-
   const { data: booksapi, isLoading, isError, error } = useGetBooksQuery();
   const dispatch = useDispatch();
     
   useEffect(() => {
     !isLoading && booksapi !== undefined ? dispatch(setBooks(booksapi)) : dispatch(setBooks([]));
+    const checkUser = async () => {
+      try {
+        const userEmail = await AsyncStorage.getItem("userEmail")
+        const userToken = await AsyncStorage.getItem("userToken")
+        if(userEmail && userToken) {
+          dispatch(setUser(userEmail));
+          dispatch(setIdToken(userToken));
+        }  
+      } catch (error) {
+        console.log('Main Navigation: ', error);
+      }      
+    }
+    checkUser();
     loadYourBooks();
   }, [isLoading]);
 
