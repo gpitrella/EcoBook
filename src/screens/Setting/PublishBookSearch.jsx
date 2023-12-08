@@ -222,7 +222,7 @@ function PublishBookSearch({ navigation, setYourSelectedBook }) {
   return (
     <View onLayout={onLayout} style={styles.screen}>
       <Text style={styles.topDescription}>
-        Busca el libro que deseas publicar, selecionalo y continua completando la información faltante para poder publicar tu libro.
+        Busca el libro que deseas publicar, selecionalo y continua completando toda la información para poder publicar tu libro.
       </Text>
       { !selectedBook ? 
         <Animated.View style={anims.search}>

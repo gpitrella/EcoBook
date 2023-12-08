@@ -4,6 +4,7 @@ import Settings from "../screens/Setting/Settings";
 import TermsAndConditions from "../screens/TermsAndConditions";
 import PublishBookFirst from "../screens/Setting/PublishBookFirst";
 import PublishBookSecond from "../screens/Setting/PublishBookSecond";
+import PublishBookThird from "../screens/Setting/PublishBookThird";
 import YourPublishBook from "../screens/Setting/YourPublishBook";
 import AuthNavigator from "./AuthNavigator";
 import { useSelector } from "react-redux";
@@ -35,6 +36,7 @@ const PublishNavigator = () => {
       <Stack.Navigator initialRouteName="publishBookFirst" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="publishBookFirst" component={PublishBookFirst} />
         <Stack.Screen name="publishBookSecond" component={PublishBookSecond} />
+        <Stack.Screen name="PublishBookThird" component={PublishBookThird} />
       </Stack.Navigator>
      }
   </>

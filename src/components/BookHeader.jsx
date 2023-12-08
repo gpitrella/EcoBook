@@ -27,9 +27,9 @@ function BookHeader({ scrollY, book, bgsUpload, pickImage, publish, bgUpload }) 
       paddingTop: status,
       position: 'absolute',
       justifyContent: 'center',
-      paddingTop: pickImage ? 100 : 0,
+      paddingTop: pickImage ? 130 : 0,
       shadowOffset: { height: 2 },
-      backgroundColor: '#0002',
+      backgroundColor: '#dfdfdf01',
       shadowOpacity: interpolate(scrollY.value, [HEADER - navbar - 20, HEADER - navbar], [0, 0.25], 'clamp'),
       transform: [
         { translateY: interpolate(scrollY.value, [0, HEADER - navbar], [0, -HEADER + navbar], 'clamp') },
@@ -142,7 +142,7 @@ function BookHeader({ scrollY, book, bgsUpload, pickImage, publish, bgUpload }) 
               { bgsUpload.map((item, index) => {
                 return (
                   <Pressable onPress={() => pickImage(index)} key={index}> 
-                      <Image style={styles.bookImg} source={{ uri: item }} />
+                      <Image style={styles.bookImg} source={{ uri: item.uri }} />
                   </Pressable> )
               })}                
             </ScrollView>            

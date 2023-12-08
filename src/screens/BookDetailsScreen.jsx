@@ -317,7 +317,7 @@ function BookDetailsScreen({ navigation, route }) {
                 </View>
                 <View style={[styles.detailsRow, styles.detailsRowBorder]}>
                   <Text center size={13}>PRECIO</Text>
-                  <Text bold style={styles.subDetails}>$ {book.price}</Text>
+                  <Text bold style={styles.subDetails}>ARG $ {book.price}</Text>
                 </View>
               </View>
               <Button onPress={() => navigation.navigate('Address', { book })} style={styles.scroll}>

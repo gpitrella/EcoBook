@@ -32,7 +32,7 @@ import { CloudConfig } from "@cloudinary/url-gen";
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-function PublishBookSecond({ navigation, route }) {
+function PublishBookThird({ navigation, route }) {
   const { yourBook } = route.params;
 
   const {
@@ -344,12 +344,20 @@ const styles = StyleSheet.create({
               <Text style={styles.titleDetails}>
                 Información requerida para publicar tu libro:
               </Text>    
+              <TextInput
+                placeholder="Precio"
+                keyboardType='numeric'
+                placeholderTextColor={colors.text}
+                style={styles.input}
+                value={newBook.price}
+                onChangeText={(num) => setNewBook({...newBook, price: num})}
+              />
               { errorInfo.error != '' && 
               <Text style={styles.errorDetails}>
                 *{ errorInfo.error }
               </Text> }
-              <Button mode="contained" onPress={() => navigation.navigate('PublishBookThird', { newBook })} style={styles.scroll}>
-                Continuar 
+              <Button mode="contained" onPress={() => checkerPublish()} style={styles.scroll}>
+                Publicar Libro
               </Button>
               </Animated.View> 
             </AnimatedScrollView>
@@ -359,4 +367,4 @@ const styles = StyleSheet.create({
    </>)
 };
 
-export default React.memo(PublishBookSecond);
+export default React.memo(PublishBookThird);
