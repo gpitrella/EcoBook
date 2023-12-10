@@ -26,15 +26,11 @@ import AuthNavigator from "../../navigation/AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setBooks } from "../../redux/slice/homeSlice";
-import { Cloudinary } from "@cloudinary/url-gen";
-import { URLConfig } from "@cloudinary/url-gen";
-import { CloudConfig } from "@cloudinary/url-gen";
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
 function PublishBookThird({ navigation, route }) {
-  const { yourBook } = route.params;
-
+  const { newBook } = route.params;
   const {
     margin, width, dark, colors, normalize, status, ios,
   } = useTheme();
@@ -66,26 +62,21 @@ function PublishBookThird({ navigation, route }) {
   const [finalPhoto, setFinalPhoto] = useState([]);
 
   const bgUpload = "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png";
-  // Create a Cloudinary instance and set your cloud name.
-  const cld = new Cloudinary({cloud: { cloudName: 'tech_market_henry' }});
 
-  // Set the Cloud configuration and URL configuration
-  let cloudConfig = new CloudConfig({ cloudName: 'tech_market_henry' });
-  let urlConfig = new URLConfig({ secure: true });
 
-  useEffect(() => {
-    if (yourBook.bookId) {
-      setNewBook({...newBook, 
-        bookId: yourBook.bookId,
-        avgRating: yourBook.avgRating,
-        title: yourBook.title,
-        author: { ...newBook.author, id: yourBook.author.id, name: yourBook.author.name },
-        imagesUrl: finalPhoto,
-        seller: user  
-      })
-    }
-  },[yourBook, bgsUpload, finalPhoto]);
-
+  // useEffect(() => {
+  //   if (yourBook.bookId) {
+  //     setnewBookDetails({...newBookDetails, 
+  //       bookId: yourBook.bookId,
+  //       avgRating: yourBook.avgRating,
+  //       title: yourBook.title,
+  //       author: { ...newBookDetails.author, id: yourBook.author.id, name: yourBook.author.name },
+  //       imagesUrl: finalPhoto,
+  //       seller: user  
+  //     })
+  //   }
+  // },[yourBook, bgsUpload, finalPhoto]);
+  console.log('NEW BOOK: ', newBook)
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -99,7 +90,7 @@ function PublishBookThird({ navigation, route }) {
     checkUser();
   }, [user])
 
-  const [newBook, setNewBook] = useState({
+  const [newBookDetails, setnewBookDetails] = useState({
     "author": {
       "id": 947,
       "name": ''
@@ -123,10 +114,10 @@ function PublishBookThird({ navigation, route }) {
   }
 
   const onPublishBook = async () => {
-    await putBook(newBook);
+    await putBook(newBookDetails);
     Haptics.selectionAsync();
     opacity.value = withDelay(300, withTiming(0));
-    navigation.navigate('BookDetails', { book: newBook });
+    navigation.navigate('BookDetails', { book: newBookDetails });
     !isLoading && booksapi !== undefined ? dispatch(setBooks(booksapi)) : null;
   }
 
@@ -176,7 +167,7 @@ function PublishBookThird({ navigation, route }) {
 const checkerPublish = () => {
   const countImages = bgsUpload.filter((element) => element.uri !== bgUpload)
   if(countImages.length === 0) setErrorInfo({ error: "Debes cargar las fotos de tu libro." })
-  else if(newBook.price == '') setErrorInfo({ error: "Debes ingresar un valor de tu libro."  }) 
+  else if(newBookDetails.price == '') setErrorInfo({ error: "Debes ingresar un valor de tu libro."  }) 
   else { 
     setErrorInfo({ error: "" })
     uploadImages() 
@@ -333,7 +324,7 @@ const styles = StyleSheet.create({
                 Completa a continuación la información para la publicación.
               </Text>             
             </View>  
-            <BookHeader scrollY={scrollY} book={newBook} bgsUpload={bgsUpload} pickImage={pickImage} publish={publishMessage} bgUpload={bgUpload} />     
+            <BookHeader scrollY={scrollY} book={newBookDetails} bgsUpload={bgsUpload} pickImage={pickImage} publish={publishMessage} bgUpload={bgUpload} />     
           <Animated.View style={anims.scrollView}>
             <AnimatedScrollView
               onScroll={scrollHandler}
@@ -349,8 +340,8 @@ const styles = StyleSheet.create({
                 keyboardType='numeric'
                 placeholderTextColor={colors.text}
                 style={styles.input}
-                value={newBook.price}
-                onChangeText={(num) => setNewBook({...newBook, price: num})}
+                value={newBookDetails.price}
+                onChangeText={(num) => setnewBookDetails({...newBookDetails, price: num})}
               />
               { errorInfo.error != '' && 
               <Text style={styles.errorDetails}>

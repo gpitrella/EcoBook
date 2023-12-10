@@ -26,9 +26,7 @@ import AuthNavigator from "../../navigation/AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setBooks } from "../../redux/slice/homeSlice";
-import { Cloudinary } from "@cloudinary/url-gen";
-import { URLConfig } from "@cloudinary/url-gen";
-import { CloudConfig } from "@cloudinary/url-gen";
+import { AntDesign } from '@expo/vector-icons';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
@@ -56,6 +54,7 @@ function PublishBookSecond({ navigation, route }) {
   const [checkedUser, setCheckedUser] = useState({ user: null, token: null});
   const user = useSelector((state) => state.authSlice.user);
   const idToken = useSelector((state) => state.authSlice.idToken);
+  const [showButton, setShowButton] = useState(false);
   const [errorInfo, setErrorInfo] = useState({ error: '' });
   const [bgsUpload, setBgsUpload] = useState([
     { uri: "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png", type: 'image', name: 'initial' },
@@ -63,15 +62,9 @@ function PublishBookSecond({ navigation, route }) {
     { uri: "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png", type: 'image', name: 'initial' },
     { uri: "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png", type: 'image', name: 'initial' }
   ])
-  const [finalPhoto, setFinalPhoto] = useState([]);
+  // const [finalPhoto, setFinalPhoto] = useState([]);
 
   const bgUpload = "https://res.cloudinary.com/djgghmpgh/image/upload/v1701201906/BgUpload2_zhzp54.png";
-  // Create a Cloudinary instance and set your cloud name.
-  const cld = new Cloudinary({cloud: { cloudName: 'tech_market_henry' }});
-
-  // Set the Cloud configuration and URL configuration
-  let cloudConfig = new CloudConfig({ cloudName: 'tech_market_henry' });
-  let urlConfig = new URLConfig({ secure: true });
 
   useEffect(() => {
     if (yourBook.bookId) {
@@ -80,11 +73,11 @@ function PublishBookSecond({ navigation, route }) {
         avgRating: yourBook.avgRating,
         title: yourBook.title,
         author: { ...newBook.author, id: yourBook.author.id, name: yourBook.author.name },
-        imagesUrl: finalPhoto,
+        imagesUrl: bgsUpload.filter((element) => element.uri !== bgUpload),
         seller: user  
       })
     }
-  },[yourBook, bgsUpload, finalPhoto]);
+  },[yourBook, bgsUpload]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -114,44 +107,43 @@ function PublishBookSecond({ navigation, route }) {
     "condition": 'good'
   });
   
-  const uploadImages = async(e) => {
-    const finalPhoto = bgsUpload.filter((element) => element.uri !== bgUpload)
-    { finalPhoto.map((photo, index) => {
-       cloudinaryUpload(photo, index);
-    })} 
- 
-  }
+  // const uploadImages = async(e) => {
+  //   const finalPhoto = bgsUpload.filter((element) => element.uri !== bgUpload)
+  //   { finalPhoto.map((photo, index) => {
+  //      cloudinaryUpload(photo, index);
+  //   })}  
+  // }
 
-  const onPublishBook = async () => {
-    await putBook(newBook);
-    Haptics.selectionAsync();
-    opacity.value = withDelay(300, withTiming(0));
-    navigation.navigate('BookDetails', { book: newBook });
-    !isLoading && booksapi !== undefined ? dispatch(setBooks(booksapi)) : null;
-  }
+  // const onPublishBook = async () => {
+  //   await putBook(newBook);
+  //   Haptics.selectionAsync();
+  //   opacity.value = withDelay(300, withTiming(0));
+  //   navigation.navigate('BookDetails', { book: newBook });
+  //   !isLoading && booksapi !== undefined ? dispatch(setBooks(booksapi)) : null;
+  // }
 
-  const cloudinaryUpload = async (photo, index) => {
-    const finalPhoto = bgsUpload.filter((element) => element.uri !== bgUpload)
-    const data = new FormData()
-    data.append('file', photo)
-    data.append('upload_preset', 'djgghmpgh')
-    data.append("cloud_name", "djgghmpgh")
-    await fetch("https://api.cloudinary.com/v1_1/djgghmpgh/image/upload", {
-      method: "post",
-      body: data
-    }).then(res => res.json()).
-      then(data => {
-        finalPhoto.splice(index, 1)  
-        finalPhoto.splice(index, 0, data.secure_url)
-        setFinalPhoto([...finalPhoto])  
-        if(finalPhoto.length === finalPhoto.length) {
-          onPublishBook()
-        }
-      }).catch(err => {
-        Alert.alert("An Error Occured While Uploading")
-      })
-  }
-
+  // const cloudinaryUpload = async (photo, index) => {
+  //   const finalPhoto = bgsUpload.filter((element) => element.uri !== bgUpload)
+  //   const data = new FormData()
+  //   data.append('file', photo)
+  //   data.append('upload_preset', 'djgghmpgh')
+  //   data.append("cloud_name", "djgghmpgh")
+  //   await fetch("https://api.cloudinary.com/v1_1/djgghmpgh/image/upload", {
+  //     method: "post",
+  //     body: data
+  //   }).then(res => res.json()).
+  //     then(data => {
+  //       finalPhoto.splice(index, 1)  
+  //       finalPhoto.splice(index, 0, data.secure_url)
+  //       setFinalPhoto([...finalPhoto])  
+  //       if(finalPhoto.length === finalPhoto.length) {
+  //         onPublishBook()
+  //       }
+  //     }).catch(err => {
+  //       Alert.alert("An Error Occured While Uploading")
+  //     })
+  // }
+  console.log('NEW BOOK SECOND: ', newBook)
   const pickImage = async (index) => {
 
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -166,20 +158,23 @@ function PublishBookSecond({ navigation, route }) {
         const uri = result.assets[0].uri;
         const type = result.assets[0].type;
         const name = result.assets[0].fileName ? result.assets[0].fileName: 'newPhoto';
-        const source = { uri, type, name }
-        bgsUpload.splice(index, 1)  
-        bgsUpload.splice(index, 0, source)
-        setBgsUpload([...bgsUpload])      
+        const source = { uri, type, name };
+        bgsUpload.splice(index, 1);  
+        bgsUpload.splice(index, 0, source);
+        setBgsUpload([...bgsUpload]);
+        checkerPublish();      
     }
 };
 
 const checkerPublish = () => {
   const countImages = bgsUpload.filter((element) => element.uri !== bgUpload)
-  if(countImages.length === 0) setErrorInfo({ error: "Debes cargar las fotos de tu libro." })
-  else if(newBook.price == '') setErrorInfo({ error: "Debes ingresar un valor de tu libro."  }) 
+  if(countImages.length === 0) { 
+    setErrorInfo({ error: "Debes cargar las fotos de tu libro." })
+    setShowButton(true) 
+  }
   else { 
     setErrorInfo({ error: "" })
-    uploadImages() 
+    setShowButton(true)
   }
 }
 
@@ -256,8 +251,7 @@ const styles = StyleSheet.create({
       marginBottom: 20
     },
     scrollContainer: {
-      paddingTop: HEADER,
-      paddingBottom: status + 50,
+      paddingTop: HEADER - 10,
       margin: 'auto',
       width: '100%',
       paddingHorizontal: 10
@@ -302,10 +296,24 @@ const styles = StyleSheet.create({
       fontSize: 16,
       paddingHorizontal: 20,
       paddingTop: 0,
-      backgroundColor: '#fff'
+      backgroundColor: '#fff',
+      display: 'flex',
+      gap: 50
     },
-    titleDetails: {
-      paddingBottom: 10,
+    infoDetails: {
+      padding: 10,
+      marginBottom: 20,
+      marginTop: 0,
+      backgroundColor: colors.card,
+      borderRadius: 10,
+      opacity: 1,
+      zIndex: 100
+    },
+    iconInfo: {
+      color: colors.primary,
+      fontWeight: 'bold',
+    },
+    info: {
       fontSize: 16,
     },
     errorDetails: {
@@ -341,16 +349,20 @@ const styles = StyleSheet.create({
               contentContainerStyle={styles.scrollContainer}
             >    
             <Animated.View style={styles.details}>  
-              <Text style={styles.titleDetails}>
-                Información requerida para publicar tu libro:
-              </Text>    
+              <View style={styles.infoDetails}>                
+                <Text style={styles.info}><AntDesign name="infocirlceo" size={16} style={styles.iconInfo} /> Te recomendamos subir las fotos con buena iluminación y claras, subir una 
+                 foto de la Portada, una foto de la contratapa y contas con dos fotos más para que puedas mostrar el interior del libro o algún detalle que consideres de importancia. 
+                 Debes cargar al menos una foto para continuar.
+                </Text>
+              </View>    
               { errorInfo.error != '' && 
               <Text style={styles.errorDetails}>
                 *{ errorInfo.error }
               </Text> }
+              { showButton && 
               <Button mode="contained" onPress={() => navigation.navigate('PublishBookThird', { newBook })} style={styles.scroll}>
                 Continuar 
-              </Button>
+              </Button> }
               </Animated.View> 
             </AnimatedScrollView>
           </Animated.View>            
