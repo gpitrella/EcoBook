@@ -2,11 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Pressable,
+  StyleSheet
 } from "react-native";
 import Button from '../../components/Button'
 import GoBack from '../../components/GoBack';
@@ -25,7 +21,6 @@ import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import AuthNavigator from "../../navigation/AuthNavigator";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setBooks } from "../../redux/slice/homeSlice";
 import { AntDesign } from '@expo/vector-icons';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
