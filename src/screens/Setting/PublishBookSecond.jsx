@@ -6,7 +6,6 @@ import {
 } from "react-native";
 import Button from '../../components/Button'
 import GoBack from '../../components/GoBack';
-import axios from 'axios';
 import { useTheme } from '@react-navigation/native';
 import { useDispatch } from "react-redux";
 import Animated, {
