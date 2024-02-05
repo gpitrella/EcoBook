@@ -8,9 +8,8 @@ import { useTheme } from '@react-navigation/native';
 
 function Address({ navigation, route }) {
     const { colors, margin } = useTheme();
-    
-    const { book } = route.params;
 
+    const { book } = route.params;
     const styles = StyleSheet.create({
         mainAddresContainer: {
             flex: 1,
