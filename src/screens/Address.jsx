@@ -61,7 +61,7 @@ function Address({ navigation, route }) {
       <View style={styles.mainAddresContainer} >
           <GoBack navigation={navigation}/>
           <Text style={styles.wishlistTitle}>
-              Dirección de Envio
+              Dirección de Envío
           </Text>
         <View style={styles.containerAddresContainer} >
           <KeyboardAwareScrollView>
