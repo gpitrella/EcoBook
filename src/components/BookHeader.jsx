@@ -10,6 +10,7 @@ import Text from './Text';
 // Load a single book
 function BookHeader({ scrollY, book, bgsUpload, pickImage, publish, bgUpload }) {
   // const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+  console.log('bgsUpload: ', bgsUpload)
   const {
     width, margin, colors, normalize, navbar, status,
   } = useTheme();
@@ -73,6 +74,7 @@ function BookHeader({ scrollY, book, bgsUpload, pickImage, publish, bgUpload }) 
   // go to search screen
   const searchScreen = () => {
     navigation.push('BookSearch');
+    
   };
 
   // empty list placeholder
@@ -81,6 +83,7 @@ function BookHeader({ scrollY, book, bgsUpload, pickImage, publish, bgUpload }) 
       <AntDesign color={colors.text} size={27} name="book" />
       <Text size={16} center style={styles.emptyText}>
         {'I\'m lonely. \n Add something here.'}
+
       </Text>
     </Pressable>
   );
@@ -139,7 +142,7 @@ function BookHeader({ scrollY, book, bgsUpload, pickImage, publish, bgUpload }) 
               horizontal
               showsHorizontalScrollIndicator={false} 
             >
-              { bgsUpload.map((item, index) => {
+              { bgsUpload?.map((item, index) => {
                 return (
                   <Pressable onPress={() => pickImage(index)} key={index}> 
                       <Image style={styles.bookImg} source={{ uri: item.uri }} />
