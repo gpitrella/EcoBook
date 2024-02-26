@@ -285,8 +285,8 @@ function BookDetailsScreen({ navigation, route }) {
 
   // Find book in list
   const item = bookList.find((b) => b.bookId === book.bookId);
-  const phoneNumber = '5492614607020'; // Replace with the desired phone number
-  const message = 'Hi, I saw your book on Recircula and I want more details about it!'; // Replace with your custom message
+  const phoneNumber = '5492614607020'; 
+  const message = 'Hi, I saw your book on Recircula and I want more details about it!'; 
 
   const openWhatsApp = () => {
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
