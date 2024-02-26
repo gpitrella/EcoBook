@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, StatusBar, Pressable, StyleSheet } from 'react-native';
+import { View, Image, StatusBar, Pressable, StyleSheet, Linking } from 'react-native';
 import Animated, {
   interpolate, withTiming, runOnJS,
   useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, useAnimatedScrollHandler,
@@ -285,6 +285,26 @@ function BookDetailsScreen({ navigation, route }) {
 
   // Find book in list
   const item = bookList.find((b) => b.bookId === book.bookId);
+  const phoneNumber = '5492614607020'; // Replace with the desired phone number
+  const message = 'Hi, I saw your book on Recircula and I want more details about it!'; // Replace with your custom message
+
+  const openWhatsApp = () => {
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  
+
+    Linking.canOpenURL(whatsappURL)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(whatsappURL);
+        } else {
+          console.error("WhatsApp is not installed");
+        }
+      })
+      .catch((error) => console.error("An error occurred", error));
+  };
+
+
+
   // Render book details
   return (
       <PanGestureHandler
@@ -320,8 +340,8 @@ function BookDetailsScreen({ navigation, route }) {
                   <Text bold style={styles.subDetails}>ARG $ {book.price}</Text>
                 </View>
               </View>
-              <Button onPress={() => navigation.navigate('Address', { book })} style={styles.scroll}>
-                Comprar
+              <Button onPress={openWhatsApp} style={styles.scroll}>
+                Contactar al Vendedor
               </Button>
               <Animated.View style={anims.details}>
                 <View style={styles.authorBox}>
