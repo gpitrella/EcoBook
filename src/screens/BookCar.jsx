@@ -183,7 +183,7 @@ function BookCar({ navigation }) {
         style={styles.placeholderImg}
       />
       <Text center style={styles.placeholderText}>
-        No tienes ningun libro agregado a tu Carrito de Compras. Agrega tu primer libro.
+        No tienes ningun libro en tu Carrito de Compras. Agrega tu primer libro.
       </Text>
     </View>
   );
