@@ -20,7 +20,8 @@ const Autocomplete = () => {
           url:
             'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
           useOnPlatform: 'web',
-        }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+        }} 
+        // this in only required for use on the web. See https://git.io/JflFv more for details.
       />
     </View>
   );
