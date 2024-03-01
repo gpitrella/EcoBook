@@ -53,7 +53,7 @@ function Books({ navigation }) {
     <ScrollView style={styles.screen} centerContent contentContainerStyle={styles.scroll}>
       <LottieView autoPlay loop style={styles.lottie} source={lottie} />
       <Text bold center style={styles.title}>
-        {'Bienvenido a Recircula tus Libros'}
+        {'Bienvenido a Recircula'}
       </Text>
       <Text center style={styles.subTitle}>
         Encontra todos los libros que buscas y colabora con el planeta.

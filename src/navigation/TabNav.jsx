@@ -76,7 +76,7 @@ const TabNav = () => {
             />
           ),
           tabBarShowLabel: true,
-          tabBarLabel: 'Vender',
+          tabBarLabel: 'Publicar',
         }}
         name="publishNavigator"
         component={PublishNavigator}

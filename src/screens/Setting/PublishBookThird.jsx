@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Button from '../../components/Button'
 import GoBack from '../../components/GoBack';
+import Autocomplete from '../../components/Autocomplete';
 import axios from 'axios';
 import { useTheme } from '@react-navigation/native';
 import { useDispatch } from "react-redux";
@@ -40,7 +41,7 @@ function PublishBookThird({ navigation, route }) {
   const { data: booksapi, isLoading, isError, error } = useGetBooksQuery();
   const panRef = useRef();
   const [enabled, setEnabled] = useState(true);
-  const HEADER = normalize(width + status, 500) + margin;
+  const HEADER = normalize(width + status, 130) + margin;
   const opacity = useSharedValue(1);
   const y = useSharedValue(0);
   const x = useSharedValue(0);
@@ -109,8 +110,7 @@ function PublishBookThird({ navigation, route }) {
     const finalPhoto = bgsUpload.filter((element) => element.uri !== bgUpload)
     { finalPhoto.map((photo, index) => {
        cloudinaryUpload(photo, index);
-    })} 
- 
+    })}  
   }
 
   const onPublishBook = async () => {
@@ -319,12 +319,10 @@ const styles = StyleSheet.create({
       <Animated.View style={anims.screen}>
             <View style={styles.backBtn}> 
               <GoBack navigation={navigation} />
-              <Text style={styles.topDescription}>
-                Carga las fotos de tu libro Portada, contratapa y foto de detalles importantes. 
-                Completa a continuación la información para la publicación.
+              <Text style={styles.topDescription}>                
+                Completa la información a continuación para finalizar la publicación de tu libro.
               </Text>             
             </View>  
-            <BookHeader scrollY={scrollY} book={newBookDetails} bgsUpload={bgsUpload} pickImage={pickImage} publish={publishMessage} bgUpload={bgUpload} />     
           <Animated.View style={anims.scrollView}>
             <AnimatedScrollView
               onScroll={scrollHandler}
@@ -333,8 +331,12 @@ const styles = StyleSheet.create({
             >    
             <Animated.View style={styles.details}>  
               <Text style={styles.titleDetails}>
-                Información requerida para publicar tu libro:
-              </Text>    
+                Carga la dirección donde esta el libro.
+              </Text>  
+              <Autocomplete />  
+              <Text style={styles.titleDetails}>
+                Precio estimado del libro
+              </Text> 
               <TextInput
                 placeholder="Precio"
                 keyboardType='numeric'
@@ -343,6 +345,7 @@ const styles = StyleSheet.create({
                 value={newBookDetails.price}
                 onChangeText={(num) => setnewBookDetails({...newBookDetails, price: num})}
               />
+              
               { errorInfo.error != '' && 
               <Text style={styles.errorDetails}>
                 *{ errorInfo.error }
