@@ -12,7 +12,7 @@ const Autocomplete = () => {
         placeholder="Search"
         query={{
           key: GOOGLE_PLACES_API_KEY,
-          language: 'en', // language of the results
+          language: 'en', // language of the final results
         }}
         onPress={(data, details = null) => console.log(data)}
         onFail={(error) => console.error(error)}
